@@ -143,3 +143,6 @@ google_token.json
 *translations.txt
 *untranslated.txt
 *tanslation.txt
+
+# Docker 
+pg_data/

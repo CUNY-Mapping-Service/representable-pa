@@ -1,4 +1,4 @@
-from state_abbrev import us_state_abbrev as dicta
+from ..state_abbrev import us_state_abbrev as dicta
 import json
 
 
@@ -22,7 +22,7 @@ def main():
         jsondict.append(currdict)
         i += 1
 
-    with open("./main/fixtures/states.json", "w") as outfile:
+    with open("../main/fixtures/states.json", "w") as outfile:
         json.dump(jsondict, outfile)
 
 

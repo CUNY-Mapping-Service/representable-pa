@@ -7,6 +7,27 @@ Representable is creating maps of communities to fight for equal and impartial r
 ### Documentation
 Check out our [Docs](https://docs.representable.org) site for a guide to installing Representable and contributing to various parts of the site. If you find any issues, we would love to know! Please open an issue request for any incomplete documentation.
 
+#### Quick start
+
+```bash
+cp .env.example .env # update the variables
+
+docker compose up -d
+docker compose exec app /bin/bash
+
+# run once to: setup the database, superuser, and test the app
+export DJANGO_SETTINGS_MODULE=representable.settings.dev 
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py loaddata states.json
+python manage.py collectstatic
+python manage.py test
+
+# run server
+python manage.py runserver 0:8000 --settings=representable.settings.dev
+```
+
 ### General Issue Reporting
 For bug reports and general feature requests, please open a [Github issue](https://github.com/Representable/representable/issues/new/choose). We welcome all feedback and suggestions!
 

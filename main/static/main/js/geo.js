@@ -393,7 +393,7 @@ function surveyP1ToAddress() {
 // TODO: update so that these are objects, then they will show up
 // move this outside this function and load in existing tags from server
 tags_repl = tags.replaceAll("'", '"');
-tagslist = JSON.parse(tags_repl);
+tagslist = JSON.parse(tags_repl ? tags_repl : '{}');
 
 var tagnames = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
@@ -897,7 +897,10 @@ function createCommPolygon() {
       if (multiPolySave === undefined) {
         multiPolySave = feature;
       } else {
-        multiPolySave = turf.union(multiPolySave, feature);
+        const featureCollection = turf.featureCollection([
+          multiPolySave, feature
+        ])
+        multiPolySave = turf.union(featureCollection);
       }
     }
   });
@@ -1724,7 +1727,10 @@ map.on("style.load", function () {
         if (i === 0) {
           currentBbox = memoPoly;
         } else {
-          currentBbox = turf.union(memoPoly, currentBbox);
+          const featureCollection = turf.featureCollection([
+            memoPoly, currentBbox
+          ])
+          currentBbox = turf.union(featureCollection);
         }
       }
     }
@@ -1747,11 +1753,14 @@ map.on("style.load", function () {
         if (isEmptyFilter(filter)) {
           sessionStorage.setItem("selectBbox", "[]");
         }
-        if (selectBbox === null) {
+        if (selectBbox) {
           selectBbox = [];
         }
         else {
-          selectBbox = turf.difference(selectBbox, currentBbox);
+          const featureCollection = turf.featureCollection([
+            currentBbox, selectBbox
+          ])
+          selectBbox = turf.difference(featureCollection);
           if(blockGroupPolygons == null || unit_id != bg_id) {
             if (selectBbox != null && turf.getType(selectBbox) == "MultiPolygon") {
               showWarningMessage(
@@ -1780,7 +1789,10 @@ map.on("style.load", function () {
             );
           }
         }
-        selectBbox = turf.union(currentBbox, selectBbox);
+        const featureCollection = turf.featureCollection([
+          currentBbox, selectBbox
+        ])
+        selectBbox = turf.union(featureCollection);
       }
 
       // Run through the queried features and set a filter based on GEOID

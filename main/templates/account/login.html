@@ -1,17 +1,28 @@
 <!--Modify the existing login template https://github.com/pennersr/django-allauth/blob/master/allauth/templates/account/login.html-->
 <!-- allows bootstrap in form-->
 {% load i18n %}
-{% load account socialaccount %}
+{% load static %}
+{% load socialaccount %}
 {% load widget_tweaks %}
 
 <!-- Login component -->
 <div class="auth-wrap col-sm-9 col-md-7 col-lg-5 mx-auto">
+    <div id="acc_already" class="text-left">{% trans "Already have an account?" %}</div>
+    <!-- <h4 class="auth-title">{% trans "Log In" %}</h4> -->
+    <a href="{% provider_login_url 'google' %}">
+        <button 
+            style="gap: 1rem;"
+            class="btn btn-outline-primary mx-auto w-75 d-flex align-items-center justify-content-center">
+            <img class="" src="{% static 'img/google-icon.svg' %}" width="16" height="16"
+                alt="Google icon logo" />{% trans "Log in with Google" %}
+        </button>
+    </a>
+    <h3 class="my-2">OR</h3>
     <form id="login-form" class="login auth-form" method="POST" action="{% url 'account_login' %}">
         {% if redirect_field_value %}
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <div id="acc_already" class="text-left">{% trans "Already have an account?" %}</div>
-        <h4 class="auth-title">{% trans "Log In" %}</h4>
+       
         {% if login_error %}
             <div class="alert alert-danger text-left" role="alert">
                 {{login_error}}
@@ -39,9 +50,5 @@
         <a class="auth-link to-auth-link" href="#signup-form">{% trans "No Account? Sign up."%}</a>
 
     </form>
-
-    {% comment %} google code comment {% endcomment %}
-    {% comment %} <a href="{% provider_login_url 'google' %}"><button class="btn btn-outline-primary mt-5 social-btn w-75"><img class="mr-3 mt-0" src="{% static 'img/google-icon.svg' %}" width="16" height="16" alt="Google icon logo"/>{% trans "Continue with Google" %}</button></a> {% endcomment %}
-
 
 </div>

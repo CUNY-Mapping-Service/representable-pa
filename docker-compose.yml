@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    # environment:
+    #   - DATABASE_URL=postgresql://representable:password@db/representable_db
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    tty: true
+    stdin_open: true
+  db:
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=representable_db
+      - POSTGRES_USER=representable
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5433:5432" # access via port 5433
+    # creating a new user
+    # psql -U public_test representable_db
+    # CREATE USER public_test WITH encrypted password 'test';
+    # change to select only for non-PII tables
+    # GRANT ALL PRIVILEGES ON DATABASE representable_db to public_test;

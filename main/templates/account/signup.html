@@ -1,48 +1,60 @@
 <!-- adaptation of official allauth code https://github.com/pennersr/django-allauth/blob/master/allauth/templates/account/signup.html-->
 <!-- allows bootstrap in form-->
+{% load static %}
 {% load widget_tweaks %}
+{% load socialaccount %}
 
 {% load i18n %}
 
 <div class="auth-wrap col-sm-9 col-md-7 col-lg-5 mx-auto">
+    <a href="{% provider_login_url 'google' %}">
+        <button 
+            style="gap: 1rem;"
+            class="btn btn-outline-primary mx-auto w-75 d-flex align-items-center justify-content-center">
+            <img class="" src="{% static 'img/google-icon.svg' %}" width="16" height="16"
+                alt="Google icon logo" />{% trans "Sign up with Google" %}
+        </button>
+    </a>
+    <h3 class="my-2">OR</h3>
     <form id="signup-form" class="signup auth-form" method="post" action="{% url 'account_signup' %}">
-        {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-        {% endif %}
-        <h4 class="auth-title">{% trans "Sign Up" %}</h4>
-        {% if signup_errors %}
-            <div class="alert alert-danger text-left">
-                {% for error in signup_errors.values%}
-                    <p>{{ error.0|escape }}</p>
+        <fieldset disabled="disabled" title="Disabled due to email server issue. Please use google to sign up for now.">
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            {% if signup_errors %}
+                <div class="alert alert-danger text-left">
+                    {% for error in signup_errors.values%}
+                        <p>{{ error.0|escape }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% csrf_token %}
+
+            <div class="form-group">
+                {% for field in signup_form %}
+                    <div class="auth-form-label">{{ field.label }}</div>
+                    <div class="field-wrap">
+                        {{ field|append_attr:"class:form-control my-2 auth-field" }}
+                    </div>
+                    {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
                 {% endfor %}
             </div>
-        {% endif %}
-        {% csrf_token %}
 
-        <div class="form-group">
-            {% for field in signup_form %}
-                <div class="auth-form-label">{{ field.label }}</div>
-                <div class="field-wrap">
-                    {{ field|append_attr:"class:form-control my-2 auth-field" }}
+            <div class="row equal">
+                <div class="col-lg-1 col-md-1 col-xs-12 text-center">
+                    <i class="fas fa-lock m-1 text-primary"></i>
                 </div>
-                {% if field.help_text %}
-                    <p class="help">{{ field.help_text|safe }}</p>
-                {% endif %}
-            {% endfor %}
-        </div>
-
-        <div class="row equal">
-            <div class="col-lg-1 col-md-1 col-xs-12 text-center">
-                <i class="fas fa-lock m-1 text-primary"></i>
+                <div class="col-lg-10 col-md-9">
+                    <p class="text-left align-text-bottom privacy-note">{% trans "Making an account helps us protect legitimate submissions." %}</p>
+                </div>
             </div>
-            <div class="col-lg-10 col-md-9">
-                <p class="text-left align-text-bottom privacy-note">{% trans "Making an account helps us protect legitimate submissions." %}</p>
+            <div class="auth-btn-wrap">
+                <button class="btn btn-lg btn-primary text-uppercase auth-btn" type="submit">{% trans "Sign Up" %}</button>
             </div>
-        </div>
-        <div class="auth-btn-wrap">
-            <button class="btn btn-lg btn-primary text-uppercase auth-btn" type="submit">{% trans "Sign Up" %}</button>
-        </div>
 
-        <a class="auth-link to-auth-link" href="#login-form">{% trans "Already have an account? Log in."%}</a>
+            <a class="auth-link to-auth-link" href="#login-form">{% trans "Already have an account? Log in."%}</a>
+            </fieldset>
     </form>
 </div>

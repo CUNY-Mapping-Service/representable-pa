@@ -5,7 +5,7 @@
     "fields": {
       "name": "Alabama",
       "abbr": "AL",
-      "content1": "<p> Redistricting information for Alabama is on its way! </p>"
+      "content_news": "<p> Redistricting information for Alabama is on its way! </p>"
     }
   },
   {
@@ -14,7 +14,7 @@
     "fields": {
       "name": "Alaska",
       "abbr": "AK",
-      "content1": "<p> Redistricting information for Alaska is on its way! </p>"
+      "content_news": "<p> Redistricting information for Alaska is on its way! </p>"
     }
   },
   {
@@ -23,7 +23,7 @@
     "fields": {
       "name": "Arizona",
       "abbr": "AZ",
-      "content1": "<p> Redistricting information for Arizona is on its way! </p>"
+      "content_news": "<p> Redistricting information for Arizona is on its way! </p>"
     }
   },
   {
@@ -32,7 +32,7 @@
     "fields": {
       "name": "Arkansas",
       "abbr": "AR",
-      "content1": "<p> Redistricting information for Arkansas is on its way! </p>"
+      "content_news": "<p> Redistricting information for Arkansas is on its way! </p>"
     }
   },
   {
@@ -41,7 +41,7 @@
     "fields": {
       "name": "California",
       "abbr": "CA",
-      "content1": "<p> Redistricting information for California is on its way! </p>"
+      "content_news": "<p> Redistricting information for California is on its way! </p>"
     }
   },
   {
@@ -50,7 +50,7 @@
     "fields": {
       "name": "Colorado",
       "abbr": "CO",
-      "content1": "<p> Redistricting information for Colorado is on its way! </p>"
+      "content_news": "<p> Redistricting information for Colorado is on its way! </p>"
     }
   },
   {
@@ -59,7 +59,7 @@
     "fields": {
       "name": "Connecticut",
       "abbr": "CT",
-      "content1": "<p> Redistricting information for Connecticut is on its way! </p>"
+      "content_news": "<p> Redistricting information for Connecticut is on its way! </p>"
     }
   },
   {
@@ -68,7 +68,7 @@
     "fields": {
       "name": "Delaware",
       "abbr": "DE",
-      "content1": "<p> Redistricting information for Delaware is on its way! </p>"
+      "content_news": "<p> Redistricting information for Delaware is on its way! </p>"
     }
   },
   {
@@ -77,7 +77,7 @@
     "fields": {
       "name": "District of Columbia",
       "abbr": "DC",
-      "content1": "<p> Redistricting information for District of Columbia is on its way! </p>"
+      "content_news": "<p> Redistricting information for District of Columbia is on its way! </p>"
     }
   },
   {
@@ -86,7 +86,7 @@
     "fields": {
       "name": "Florida",
       "abbr": "FL",
-      "content1": "<p> Redistricting information for Florida is on its way! </p>"
+      "content_news": "<p> Redistricting information for Florida is on its way! </p>"
     }
   },
   {
@@ -95,7 +95,7 @@
     "fields": {
       "name": "Georgia",
       "abbr": "GA",
-      "content1": "<p> Redistricting information for Georgia is on its way! </p>"
+      "content_news": "<p> Redistricting information for Georgia is on its way! </p>"
     }
   },
   {
@@ -104,7 +104,7 @@
     "fields": {
       "name": "Hawaii",
       "abbr": "HI",
-      "content1": "<p> Redistricting information for Hawaii is on its way! </p>"
+      "content_news": "<p> Redistricting information for Hawaii is on its way! </p>"
     }
   },
   {
@@ -113,7 +113,7 @@
     "fields": {
       "name": "Idaho",
       "abbr": "ID",
-      "content1": "<p> Redistricting information for Idaho is on its way! </p>"
+      "content_news": "<p> Redistricting information for Idaho is on its way! </p>"
     }
   },
   {
@@ -122,7 +122,7 @@
     "fields": {
       "name": "Illinois",
       "abbr": "IL",
-      "content1": "<p> Redistricting information for Illinois is on its way! </p>"
+      "content_news": "<p> Redistricting information for Illinois is on its way! </p>"
     }
   },
   {
@@ -131,7 +131,7 @@
     "fields": {
       "name": "Indiana",
       "abbr": "IN",
-      "content1": "<p> Redistricting information for Indiana is on its way! </p>"
+      "content_news": "<p> Redistricting information for Indiana is on its way! </p>"
     }
   },
   {
@@ -140,7 +140,7 @@
     "fields": {
       "name": "Iowa",
       "abbr": "IA",
-      "content1": "<p> Redistricting information for Iowa is on its way! </p>"
+      "content_news": "<p> Redistricting information for Iowa is on its way! </p>"
     }
   },
   {
@@ -149,7 +149,7 @@
     "fields": {
       "name": "Kansas",
       "abbr": "KS",
-      "content1": "<p> Redistricting information for Kansas is on its way! </p>"
+      "content_news": "<p> Redistricting information for Kansas is on its way! </p>"
     }
   },
   {
@@ -158,7 +158,7 @@
     "fields": {
       "name": "Kentucky",
       "abbr": "KY",
-      "content1": "<p> Redistricting information for Kentucky is on its way! </p>"
+      "content_news": "<p> Redistricting information for Kentucky is on its way! </p>"
     }
   },
   {
@@ -167,7 +167,7 @@
     "fields": {
       "name": "Louisiana",
       "abbr": "LA",
-      "content1": "<p> Redistricting information for Louisiana is on its way! </p>"
+      "content_news": "<p> Redistricting information for Louisiana is on its way! </p>"
     }
   },
   {
@@ -176,7 +176,7 @@
     "fields": {
       "name": "Maine",
       "abbr": "ME",
-      "content1": "<p> Redistricting information for Maine is on its way! </p>"
+      "content_news": "<p> Redistricting information for Maine is on its way! </p>"
     }
   },
   {
@@ -185,7 +185,7 @@
     "fields": {
       "name": "Maryland",
       "abbr": "MD",
-      "content1": "<p> Redistricting information for Maryland is on its way! </p>"
+      "content_news": "<p> Redistricting information for Maryland is on its way! </p>"
     }
   },
   {
@@ -194,7 +194,7 @@
     "fields": {
       "name": "Massachusetts",
       "abbr": "MA",
-      "content1": "<p> Redistricting information for Massachusetts is on its way! </p>"
+      "content_news": "<p> Redistricting information for Massachusetts is on its way! </p>"
     }
   },
   {
@@ -203,7 +203,7 @@
     "fields": {
       "name": "Michigan",
       "abbr": "MI",
-      "content1": "<p> Redistricting information for Michigan is on its way! </p>"
+      "content_news": "<p> Redistricting information for Michigan is on its way! </p>"
     }
   },
   {
@@ -212,7 +212,7 @@
     "fields": {
       "name": "Minnesota",
       "abbr": "MN",
-      "content1": "<p> Redistricting information for Minnesota is on its way! </p>"
+      "content_news": "<p> Redistricting information for Minnesota is on its way! </p>"
     }
   },
   {
@@ -221,7 +221,7 @@
     "fields": {
       "name": "Mississippi",
       "abbr": "MS",
-      "content1": "<p> Redistricting information for Mississippi is on its way! </p>"
+      "content_news": "<p> Redistricting information for Mississippi is on its way! </p>"
     }
   },
   {
@@ -230,7 +230,7 @@
     "fields": {
       "name": "Missouri",
       "abbr": "MO",
-      "content1": "<p> Redistricting information for Missouri is on its way! </p>"
+      "content_news": "<p> Redistricting information for Missouri is on its way! </p>"
     }
   },
   {
@@ -239,7 +239,7 @@
     "fields": {
       "name": "Montana",
       "abbr": "MT",
-      "content1": "<p> Redistricting information for Montana is on its way! </p>"
+      "content_news": "<p> Redistricting information for Montana is on its way! </p>"
     }
   },
   {
@@ -248,7 +248,7 @@
     "fields": {
       "name": "Nebraska",
       "abbr": "NE",
-      "content1": "<p> Redistricting information for Nebraska is on its way! </p>"
+      "content_news": "<p> Redistricting information for Nebraska is on its way! </p>"
     }
   },
   {
@@ -257,7 +257,7 @@
     "fields": {
       "name": "Nevada",
       "abbr": "NV",
-      "content1": "<p> Redistricting information for Nevada is on its way! </p>"
+      "content_news": "<p> Redistricting information for Nevada is on its way! </p>"
     }
   },
   {
@@ -266,7 +266,7 @@
     "fields": {
       "name": "New Hampshire",
       "abbr": "NH",
-      "content1": "<p> Redistricting information for New Hampshire is on its way! </p>"
+      "content_news": "<p> Redistricting information for New Hampshire is on its way! </p>"
     }
   },
   {
@@ -275,7 +275,7 @@
     "fields": {
       "name": "New Jersey",
       "abbr": "NJ",
-      "content1": "<p> Redistricting information for New Jersey is on its way! </p>"
+      "content_news": "<p> Redistricting information for New Jersey is on its way! </p>"
     }
   },
   {
@@ -284,7 +284,7 @@
     "fields": {
       "name": "New Mexico",
       "abbr": "NM",
-      "content1": "<p> Redistricting information for New Mexico is on its way! </p>"
+      "content_news": "<p> Redistricting information for New Mexico is on its way! </p>"
     }
   },
   {
@@ -293,7 +293,7 @@
     "fields": {
       "name": "New York",
       "abbr": "NY",
-      "content1": "<p> Redistricting information for New York is on its way! </p>"
+      "content_news": "<p> Redistricting information for New York is on its way! </p>"
     }
   },
   {
@@ -302,7 +302,7 @@
     "fields": {
       "name": "North Carolina",
       "abbr": "NC",
-      "content1": "<p> Redistricting information for North Carolina is on its way! </p>"
+      "content_news": "<p> Redistricting information for North Carolina is on its way! </p>"
     }
   },
   {
@@ -311,7 +311,7 @@
     "fields": {
       "name": "North Dakota",
       "abbr": "ND",
-      "content1": "<p> Redistricting information for North Dakota is on its way! </p>"
+      "content_news": "<p> Redistricting information for North Dakota is on its way! </p>"
     }
   },
   {
@@ -320,7 +320,7 @@
     "fields": {
       "name": "Northern Mariana Islands",
       "abbr": "MP",
-      "content1": "<p> Redistricting information for Northern Mariana Islands is on its way! </p>"
+      "content_news": "<p> Redistricting information for Northern Mariana Islands is on its way! </p>"
     }
   },
   {
@@ -329,7 +329,7 @@
     "fields": {
       "name": "Ohio",
       "abbr": "OH",
-      "content1": "<p> Redistricting information for Ohio is on its way! </p>"
+      "content_news": "<p> Redistricting information for Ohio is on its way! </p>"
     }
   },
   {
@@ -338,7 +338,7 @@
     "fields": {
       "name": "Oklahoma",
       "abbr": "OK",
-      "content1": "<p> Redistricting information for Oklahoma is on its way! </p>"
+      "content_news": "<p> Redistricting information for Oklahoma is on its way! </p>"
     }
   },
   {
@@ -347,7 +347,7 @@
     "fields": {
       "name": "Oregon",
       "abbr": "OR",
-      "content1": "<p> Redistricting information for Oregon is on its way! </p>"
+      "content_news": "<p> Redistricting information for Oregon is on its way! </p>"
     }
   },
   {
@@ -356,7 +356,7 @@
     "fields": {
       "name": "Palau",
       "abbr": "PW",
-      "content1": "<p> Redistricting information for Palau is on its way! </p>"
+      "content_news": "<p> Redistricting information for Palau is on its way! </p>"
     }
   },
   {
@@ -365,7 +365,7 @@
     "fields": {
       "name": "Pennsylvania",
       "abbr": "PA",
-      "content1": "<p> Redistricting information for Pennsylvania is on its way! </p>"
+      "content_news": "<p> Redistricting information for Pennsylvania is on its way! </p>"
     }
   },
   {
@@ -374,7 +374,7 @@
     "fields": {
       "name": "Puerto Rico",
       "abbr": "PR",
-      "content1": "<p> Redistricting information for Puerto Rico is on its way! </p>"
+      "content_news": "<p> Redistricting information for Puerto Rico is on its way! </p>"
     }
   },
   {
@@ -383,7 +383,7 @@
     "fields": {
       "name": "Rhode Island",
       "abbr": "RI",
-      "content1": "<p> Redistricting information for Rhode Island is on its way! </p>"
+      "content_news": "<p> Redistricting information for Rhode Island is on its way! </p>"
     }
   },
   {
@@ -392,7 +392,7 @@
     "fields": {
       "name": "South Carolina",
       "abbr": "SC",
-      "content1": "<p> Redistricting information for South Carolina is on its way! </p>"
+      "content_news": "<p> Redistricting information for South Carolina is on its way! </p>"
     }
   },
   {
@@ -401,7 +401,7 @@
     "fields": {
       "name": "South Dakota",
       "abbr": "SD",
-      "content1": "<p> Redistricting information for South Dakota is on its way! </p>"
+      "content_news": "<p> Redistricting information for South Dakota is on its way! </p>"
     }
   },
   {
@@ -410,7 +410,7 @@
     "fields": {
       "name": "Tennessee",
       "abbr": "TN",
-      "content1": "<p> Redistricting information for Tennessee is on its way! </p>"
+      "content_news": "<p> Redistricting information for Tennessee is on its way! </p>"
     }
   },
   {
@@ -419,7 +419,7 @@
     "fields": {
       "name": "Texas",
       "abbr": "TX",
-      "content1": "<p> Redistricting information for Texas is on its way! </p>"
+      "content_news": "<p> Redistricting information for Texas is on its way! </p>"
     }
   },
   {
@@ -428,7 +428,7 @@
     "fields": {
       "name": "Utah",
       "abbr": "UT",
-      "content1": "<p> Redistricting information for Utah is on its way! </p>"
+      "content_news": "<p> Redistricting information for Utah is on its way! </p>"
     }
   },
   {
@@ -437,7 +437,7 @@
     "fields": {
       "name": "Vermont",
       "abbr": "VT",
-      "content1": "<p> Redistricting information for Vermont is on its way! </p>"
+      "content_news": "<p> Redistricting information for Vermont is on its way! </p>"
     }
   },
   {
@@ -446,7 +446,7 @@
     "fields": {
       "name": "Virgin Islands",
       "abbr": "VI",
-      "content1": "<p> Redistricting information for Virgin Islands is on its way! </p>"
+      "content_news": "<p> Redistricting information for Virgin Islands is on its way! </p>"
     }
   },
   {
@@ -455,7 +455,7 @@
     "fields": {
       "name": "Virginia",
       "abbr": "VA",
-      "content1": "<p> Redistricting information for Virginia is on its way! </p>"
+      "content_news": "<p> Redistricting information for Virginia is on its way! </p>"
     }
   },
   {
@@ -464,7 +464,7 @@
     "fields": {
       "name": "Washington",
       "abbr": "WA",
-      "content1": "<p> Redistricting information for Washington is on its way! </p>"
+      "content_news": "<p> Redistricting information for Washington is on its way! </p>"
     }
   },
   {
@@ -473,7 +473,7 @@
     "fields": {
       "name": "West Virginia",
       "abbr": "WV",
-      "content1": "<p> Redistricting information for West Virginia is on its way! </p>"
+      "content_news": "<p> Redistricting information for West Virginia is on its way! </p>"
     }
   },
   {
@@ -482,7 +482,7 @@
     "fields": {
       "name": "Wisconsin",
       "abbr": "WI",
-      "content1": "<p> Redistricting information for Wisconsin is on its way! </p>"
+      "content_news": "<p> Redistricting information for Wisconsin is on its way! </p>"
     }
   },
   {
@@ -491,7 +491,7 @@
     "fields": {
       "name": "Wyoming",
       "abbr": "WY",
-      "content1": "<p> Redistricting information for Wyoming is on its way! </p>"
+      "content_news": "<p> Redistricting information for Wyoming is on its way! </p>"
     }
   }
 ]
