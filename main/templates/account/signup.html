@@ -7,6 +7,14 @@
 {% load i18n %}
 
 <div class="auth-wrap col-sm-9 col-md-7 col-lg-5 mx-auto">
+    <div class="row equal auth-form">
+        <div class="col-lg-1 col-md-1 col-xs-12 text-center">
+            <i class="fas fa-lock m-1 text-primary"></i>
+        </div>
+        <div class="col-lg-10 col-md-9">
+            <p class="text-left align-text-bottom privacy-note">{% trans "Making an account helps us protect legitimate submissions." %}</p>
+        </div>
+    </div>
     <a href="{% provider_login_url 'google' %}">
         <button 
             style="gap: 1rem;"
@@ -15,9 +23,9 @@
                 alt="Google icon logo" />{% trans "Sign up with Google" %}
         </button>
     </a>
-    <h3 class="my-2">OR</h3>
+    <!-- <h3 class="my-2">OR</h3> -->
     <form id="signup-form" class="signup auth-form" method="post" action="{% url 'account_signup' %}">
-        <fieldset disabled="disabled" title="Disabled due to email server issue. Please use google to sign up for now.">
+        <!-- <fieldset disabled="disabled" title="Disabled due to email server issue. Please use google to sign up for now.">
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
@@ -42,17 +50,9 @@
                 {% endfor %}
             </div>
 
-            <div class="row equal">
-                <div class="col-lg-1 col-md-1 col-xs-12 text-center">
-                    <i class="fas fa-lock m-1 text-primary"></i>
-                </div>
-                <div class="col-lg-10 col-md-9">
-                    <p class="text-left align-text-bottom privacy-note">{% trans "Making an account helps us protect legitimate submissions." %}</p>
-                </div>
-            </div>
             <div class="auth-btn-wrap">
                 <button class="btn btn-lg btn-primary text-uppercase auth-btn" type="submit">{% trans "Sign Up" %}</button>
-            </div>
+            </div> -->
 
             <a class="auth-link to-auth-link" href="#login-form">{% trans "Already have an account? Log in."%}</a>
             </fieldset>

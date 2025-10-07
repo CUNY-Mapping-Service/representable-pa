@@ -21,7 +21,7 @@ from django.test import TestCase, Client
 from main.forms import CommunityForm
 from main.views import EntryView
 from django.contrib.auth import get_user_model
-
+from main.models import State
 
 class UserTest(TestCase):
     """
@@ -34,6 +34,13 @@ class UserTest(TestCase):
         """
         self.client = Client()
 
+        State.objects.create(
+            name='Michigan',
+            abbr='MI',
+            content_news='<p>Test news content</p>',
+            content_criteria='<p>Test criteria content</p>',
+        )
+
     def testSimpleGet(self):
         """
         Test get main page, map page, and entry page.
@@ -44,10 +51,9 @@ class UserTest(TestCase):
         # Check that response is 200 OK.
         self.assertEqual(response.status_code, 200)
 
-        # Check map page.
-        print("Testing Map Page")
-        response = self.client.get("/map")
-        # Check that response is 301 Redirect. (why?)
+        # Check review page.
+        print("Testing Review Page")
+        response = self.client.get("/review")
         self.assertEqual(response.status_code, 301)
 
         # Check entry page.

@@ -32,6 +32,8 @@ from django.utils.translation import gettext_lazy as _
 import django_heroku
 import os
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -86,9 +88,10 @@ SOCIALACCOUNT_PROVIDERS = {
     # https://docs.allauth.org/en/dev/socialaccount/providers/google.html
     'google': {
         'VERIFIED_EMAIL': True,
+        'EMAIL_AUTHENTICATION': True,
         'APP': {
-            'client_id': os.getenv("GOOGLE_OAUTH_CLIENT_ID"),
-            'secret': os.getenv("GOOGLE_OAUTH_SECRET"),
+            'client_id': os.environ["GOOGLE_OAUTH_CLIENT_ID"],
+            'secret': os.environ["GOOGLE_OAUTH_SECRET"],
             'key': ''
         },
         'SCOPE': [
@@ -101,8 +104,21 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+
+# Can Log In With Either Email or Username
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+# Always remember login (hide the Remember me? checkbox)
 ACCOUNT_SESSION_REMEMBER = True
+
+# Send an email via mailgun
+DEFAULT_FROM_EMAIL = "no-reply@representable.org"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
 
 
 SITE_ID = 1
@@ -122,6 +138,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware"
 ]
 
 ROOT_URLCONF = "representable.urls"
@@ -265,18 +282,6 @@ elif DATABASES["default"]["ENGINE"] == "django.db.backends.sqlite3":
     DATABASES["default"][
         "ENGINE"
     ] = "django.contrib.gis.db.backends.spatialite"
-
-# Can Log In With Either Email or Username
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-DEFAULT_FROM_EMAIL = "no-reply@representable.org"
-
-ACCOUNT_EMAIL_VERIFICATION = "optional"
-
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 7
-
 
 # Recaptcha form submit check (not the same as verification)
 if "TRAVIS" in os.environ:

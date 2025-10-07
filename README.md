@@ -28,6 +28,10 @@ python manage.py test
 python manage.py runserver 0:8000 --settings=representable.settings.dev
 ```
 
+###### Tips
+
+- If you update .env, you must run `source .env` to refresh it in your container.
+
 ### General Issue Reporting
 For bug reports and general feature requests, please open a [Github issue](https://github.com/Representable/representable/issues/new/choose). We welcome all feedback and suggestions!
 

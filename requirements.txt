@@ -6,8 +6,8 @@ botocore==1.19.22
 chardet==3.0.4
 Click==7.0
 dj-database-url==0.5.0
-Django==2.2.24
-django-allauth==0.51.0
+Django==3.2.25
+django-allauth==0.61.0
 django-appconf==1.0.3
 django-bmemcached==0.2.4
 django-ckeditor==5.9.0
@@ -16,7 +16,7 @@ django-extensions==3.0.9
 django-heroku==0.3.1
 django-import-export==2.2.0
 django-js-asset==1.2.2
-django-leaflet==0.24.0
+django-leaflet==0.28.3
 django-phone-field==1.8.0
 django-redis==4.10.0
 django-redis-cache==2.0.0
@@ -26,8 +26,8 @@ django-widget-tweaks==1.4.3
 et-xmlfile==1.0.1
 Faker==1.0.5
 future==0.18.2
-geojson==2.4.1
-geojson-rewind==0.2.0
+geojson==3.2.0
+geojson-rewind==1.1.0
 gunicorn==19.9.0
 google-api-core==1.26.3
 google-api-python-client==2.4.0

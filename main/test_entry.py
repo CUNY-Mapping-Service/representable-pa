@@ -13,13 +13,21 @@ from django.contrib.gis.geos import Point, Polygon, MultiPolygon
 from django.contrib.gis.db.models import Union
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
-
+from main.models import State
 
 class EntryTest(TestCase):
     def setUp(self):
         # Create a fake user.
         self.client = Client()
         print("Testing Create User")
+
+        State.objects.create(
+            name='Michigan',
+            abbr='MI',
+            content_news='<p>Test news content</p>',
+            content_criteria='<p>Test criteria content</p>',
+            content_coi='<p>Test COI content</p>'
+        )
 
         self.user = get_user_model().objects.create_user(
             "johndoe", "john@doe.com", "johndoe"

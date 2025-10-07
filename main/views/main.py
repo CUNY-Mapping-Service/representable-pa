@@ -171,8 +171,8 @@ Documentation: https://docs.djangoproject.com/en/2.1/topics/class-based-views/
 # View template for both the signing up and signing in
 class RepresentableLoginView(LoginView):
     template_name = "account/signup_login.html"
-    login_form = RepresentableLoginForm()
-    signup_form = RepresentableSignupForm()
+    login_form = RepresentableLoginForm
+    signup_form = RepresentableSignupForm
     request = None
 
     def dispatch(self, request, *args, **kwargs):
@@ -207,8 +207,8 @@ class RepresentableLoginView(LoginView):
 
 class RepresentableSignupView(SignupView):
     template_name = "account/signup_login.html"
-    login_form = RepresentableLoginForm()
-    signup_form = RepresentableSignupForm()
+    login_form = RepresentableLoginForm
+    signup_form = RepresentableSignupForm
     request = None
 
     def dispatch(self, request, *args, **kwargs):
