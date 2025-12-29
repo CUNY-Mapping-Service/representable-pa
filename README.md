@@ -24,8 +24,15 @@ python manage.py loaddata states.json
 python manage.py collectstatic
 python manage.py test
 
-# run server
+# run the django server
 python manage.py runserver 0:8000 --settings=representable.settings.dev
+```
+
+In another terminal run 
+
+```bash
+docker compose exec app-plus /bin/bash
+
 ```
 
 ###### Tips
