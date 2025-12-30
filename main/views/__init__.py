@@ -20,4 +20,5 @@
 from .main import *
 from .dashboard import *
 from .partners import *
+from .partners_proxy import *
 from .drives import *

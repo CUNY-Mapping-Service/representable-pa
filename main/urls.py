@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-from django.urls import include, path
+from django.urls import include, path, re_path
 
 from . import views
 from representable.settings.base import MAPBOX_KEY
@@ -162,6 +162,11 @@ urlpatterns = [
         "partners/welcome/",
         views.partners.WelcomeView.as_view(),
         name="partner_welcome",
+    ),
+    re_path(
+        r"^partners/dashboard/.*$",
+        views.partners_proxy.flask_proxy,
+        name="partner_dashboard",
     ),
     path(
         "partners/<slug:slug>/",

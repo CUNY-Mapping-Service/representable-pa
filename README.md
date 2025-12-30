@@ -32,7 +32,7 @@ In another terminal run
 
 ```bash
 docker compose exec app-plus /bin/bash
-
+uv run python app.py
 ```
 
 ###### Tips
