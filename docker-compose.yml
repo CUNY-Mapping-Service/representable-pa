@@ -42,3 +42,14 @@ services:
     # CREATE USER public_test WITH encrypted password 'test';
     # change to select only for non-PII tables
     # GRANT ALL PRIVILEGES ON DATABASE representable_db to public_test;
+  martin:
+    image: ghcr.io/maplibre/martin
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://representable:password@db/representable_db
+    depends_on:
+      - db
+    volumes:
+      - ./martin:/files
+    ports:
+      - "3000:3000"

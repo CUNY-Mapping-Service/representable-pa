@@ -163,15 +163,15 @@ urlpatterns = [
         views.partners.WelcomeView.as_view(),
         name="partner_welcome",
     ),
-    re_path(
-        r"^partners/dashboard/.*$",
-        views.partners_proxy.flask_proxy,
-        name="partner_dashboard",
-    ),
     path(
         "partners/<slug:slug>/",
         views.partners.PartnerView.as_view(),
         name="partner_page",
+    ),
+    re_path(
+        r"^partners/(?P<slug>[\w-]+)/turf/.*$",
+        views.partners_proxy.flask_proxy,
+        name="partner_turf",
     ),
     path("map/<state>/", views.main.Map.as_view(), name="map"),
     path("map/<state>/<lat>/<lng>", views.main.Map.as_view(), name="map"),

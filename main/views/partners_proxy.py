@@ -1,27 +1,47 @@
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from main.models import Organization
 
 FLASK_APP_URL = 'http://app-plus:8001'
-BASE_URL = '/partners/dashboard'
 
-@login_required
-def flask_proxy(request):
+# @login_required
+def flask_proxy(request, slug):
     """
-    Forwards requests to Flask app with user headers and other metadata
+    Forwards requests to Flask app with user headers and organization metadata.
+    
+    Args: slug: Organization slug from URL
     """
-    # Get the authenticated user
     user = request.user
-    path = request.get_full_path().replace(BASE_URL, '', 1)
-    
-    flask_url = f"{FLASK_APP_URL}{path}"
-    
-    headers = {
-        'X-Authenticated-User': user.username,
-        'X-User-Email': user.email,
-        'X-User-ID': str(user.id),
-    }
+
+    # Extract the path after /partners/{slug}/
+    # /partners/turf/test/ --> /
+    full_path = request.get_full_path()
+    path_after_org = full_path.split(f'/partners/{slug}/turf', 1)[1] 
+    flask_url = f"{FLASK_APP_URL}/{path_after_org}"
+
+    if not user.is_anonymous:
+        # Get the organization by slug
+        organization = get_object_or_404(Organization, slug=slug)
+        
+        # Check if user is an admin of this organization
+        if not user.is_org_admin(organization.id):
+            return HttpResponseForbidden("You do not have permission to access this organization")
+        
+        headers = {
+            'X-Authenticated-User': user.username,
+            'X-Org-Name': organization.name,
+            'X-Org-Id': str(organization.id),
+            'X-Org-Slug': organization.slug,
+        }
+    else:
+        headers = {
+            'X-Authenticated-User': None,
+            'X-Org-Name': None,
+            'X-Org-Id': None,
+            'X-Org-Slug': None,
+        }
     
     try:
         if request.method == 'GET':
@@ -42,7 +62,6 @@ def flask_proxy(request):
                 timeout=5
             )
         
-        # Return flask's response
         return HttpResponse(
             response.content,
             status=response.status_code,

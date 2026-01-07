@@ -1,6 +1,9 @@
-# Representable
+# Representable PA +
 
-Representable is creating maps of communities to fight for equal and impartial representation. The core web app is written in Django with Javascript/HTML/CSS frontend and Postgres/PostGIS backend. Our mapping & visualization app, currently in beta, is written in React & built using `createreactapp` and `Material UI`.
+Representable is creating maps of communities to fight for equal and impartial representation. The core web app is written in Django with Javascript/HTML/CSS frontend and Postgres/PostGIS backend.
+
+- There is a mapping & visualization app that allows orgs and users to draw their communities of interests. This is written in React & built using `createreactapp` and `Material UI`.
+- In development is a dashboard component that allows orgs to define their turfs to do census outreach. This is build in Vue, Flask, and Airflow.  
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -35,6 +38,13 @@ docker compose exec app-plus /bin/bash
 uv run python app.py
 ```
 
+If you need a live vue instance
+
+```bash
+docker compose exec app-plus /bin/bash
+bun run dev --port 8888 --host 0.0.0.0
+```
+
 ###### Tips
 
 - If you update .env, you must run `source .env` to refresh it in your container.
@@ -45,7 +55,7 @@ For bug reports and general feature requests, please open a [Github issue](https
 ### Reporting Security Issues
 We take security very seriously at Representable.org. Please send an email to [team@representable.org](mailto:team@representable.org) with any security issues and we'll open a private issue request with your concerns. We aim to respond to all security issues in a timely manner.
 
-### Active Contributors
+### Representable Contributors
 Our core team of engineers is currently 6 members strong, though we've been supported by many others along the way. See more about our team and how we work at [representable.org/about](https://representable.org/about/)
 
 - Somya Arora
