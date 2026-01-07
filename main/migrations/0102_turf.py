@@ -17,8 +17,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('tracts', django.contrib.postgres.fields.ArrayField(base_field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(blank=True, max_length=11), size=None), size=None)),
-                ('description', models.JSONField()),
-                ('meta', models.JSONField()),
+                ('description', models.JSONField(blank=True, null=True)),
+                ('meta', models.JSONField(blank=True, null=True)),
                 ('organization', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='main.organization')),
             ],
         ),

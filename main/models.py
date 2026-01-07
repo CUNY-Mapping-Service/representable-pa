@@ -531,5 +531,5 @@ class Turf(models.Model):
             blank=False,
         )
     ) # an array of tracts 
-    description = models.JSONField() # information submited by the org/ user
-    meta = models.JSONField() # used for embeddings to find related tracts 
+    description = models.JSONField(blank=True, null=True) # information submited by the org/ user
+    meta = models.JSONField(blank=True, null=True) # used for embeddings to find related tracts 

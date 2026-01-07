@@ -42,6 +42,7 @@ If you need a live vue instance
 
 ```bash
 docker compose exec app-plus /bin/bash
+cd vue-project
 bun run dev --port 8888 --host 0.0.0.0
 ```
 

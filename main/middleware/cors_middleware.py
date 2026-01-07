@@ -8,12 +8,15 @@ class CORSMiddleware:
         allowed_origins = [
             'http://localhost:8000',
             'http://localhost:8888',
+            
+            'http://127.0.0.1:8000',
+            'http://127.0.0.1:8888'
         ]
 
         # Set CORS headers
         if request.method == 'OPTIONS':
             response["Access-Control-Allow-Origin"] = "*"
-            response["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+            response["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
             response["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
             response["Access-Control-Max-Age"] = "86400"
             return response
