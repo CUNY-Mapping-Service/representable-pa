@@ -5,8 +5,6 @@ For testing use any of the following:
 ```bash
 uv run python app.py # user will default to the guest user 
 
-uv run jupyter notebook --ip=0.0.0.0 --no-browser --allow-root
-
 # visit http://127.0.0.1:8001/api/ for the api
 # visit http://127.0.0.1:8001/ for the built vue app
 
