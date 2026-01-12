@@ -36,8 +36,8 @@ const descriptionDetails = ref<string>('')
 const API_BASE_ROUTE = ref('')
 
 const initApiRoute = () => {
-  API_BASE_ROUTE.value = route.path === '/' 
-    ? 'http://127.0.0.1:8000/partners/test/turf/api' 
+  API_BASE_ROUTE.value = route.path.startsWith('/') 
+    ? 'http://127.0.0.1:8000/partners/test/turf/api'
     : './api'
 }
 

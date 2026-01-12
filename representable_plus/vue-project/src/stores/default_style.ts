@@ -25,10 +25,10 @@ const STYLE = {
             url: "https://tiles.openstreetmap.us/vector/openmaptiles.json",
         },
         tracts: {
-            promoteId: "geoid",
+            promoteId: "GEOID",
             type: "vector",
             tiles: [
-                "https://dev.urbanresearchmaps.org/martin/census2030.census2030_test.geom,census2030.census2030_test.geom_pt/{z}/{x}/{y}",
+                "http://localhost:3000/tracts_2023/{z}/{x}/{y}",
             ],
         },
     },
@@ -748,7 +748,7 @@ const STYLE = {
             id: "tract-choropleth",
             type: "fill",
             source: "tracts",
-            "source-layer": "census2030.census2030_test.geom",
+            "source-layer": "tracts_2023",
             layout: { visibility: "none" },
             paint: {},
         },
@@ -756,7 +756,7 @@ const STYLE = {
             'id': 'tract-layer',
             'type': 'fill',
             'source': 'tracts',
-            'source-layer': 'census2030.census2030_test.geom',
+            'source-layer': 'tracts_2023',
             'paint': {
                 'fill-color': [
                     'case',
@@ -771,14 +771,15 @@ const STYLE = {
                     ],
                     'transparent'
                 ],
-                'fill-opacity': 0.5
+                'fill-opacity': 0.5,
+                'fill-outline-color': '#999'
             }
         },
         {
             id: "tract-hover-layer",
             type: "fill",
             source: "tracts",
-            "source-layer": "census2030.census2030_test.geom",
+            "source-layer": "tracts_2023",
             layout: { visibility: "none" },
             paint: {
                 "fill-color": [
