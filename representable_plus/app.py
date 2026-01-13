@@ -114,6 +114,66 @@ def get_demographics(user_name, user_id, org_name, org_id):
     return jsonify(demographics)
 
 
+@app.route("/api/suggestions/<int:record_id>", methods=['GET'])
+@with_user_info
+def get_suggestions(record_id, user_name, user_id, org_name, org_id):
+    """
+    Docstring for get_suggestions
+    
+    :param record_id: Description
+    :param user_name: Description
+    :param user_id: Description
+    :param org_name: Description
+    :param org_id: Description
+
+
+    Response = {
+        "record_id": 42,
+        "current_tracts": ["06001400100", "06001400200"],
+        "suggestions": [
+            {
+            "type": "neighboring_tracts",
+            "description": "Tracts that share a boundary with your selected tracts",
+            "tracts": [
+                {
+                "neighbor_geoid": "06001400300",
+                "neighbor_name": "Census Tract 4003",
+                "shared_boundary_pct": 45.23
+                }
+            ]
+            }
+        ]
+    }
+    """
+
+    allowed_org_id = db.has_permissions_to_access_org(org_id, user_id)
+    
+    if allowed_org_id is False:
+        return jsonify({"error": "Access denied"}), 403
+
+    org_id = allowed_org_id
+    
+    # Fetch the record to get its tracts
+    records = db.get_records(org_id)
+    record = next((r for r in records if r['id'] == record_id), None)
+    
+    if not record:
+        return jsonify({"error": "Record not found"}), 404
+    
+    tracts = record.get('tracts', [])
+    
+    if not tracts:
+        return jsonify({"error": "Record has no tracts"}), 400
+    
+    # Get suggested tract groupings
+    suggestions = db.get_suggested_tract_groupings(tracts) 
+    
+    return jsonify({
+        "record_id": record_id,
+        "current_tracts": tracts,
+        "suggestions": suggestions
+    }), 200
+
 # serve Vue static files, keep at the end
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')

@@ -23,5 +23,9 @@ export const useMapStore = defineStore('map', () => {
     map.value = markRaw(mapInstance)
   }
 
-  return { map, selectedTracts, setMap, setMode, mode }
+  function setSelectedTracts(tracts: string[]){
+    selectedTracts.value = tracts
+  }
+
+  return { map, selectedTracts, setSelectedTracts, setMap, setMode, mode }
 })

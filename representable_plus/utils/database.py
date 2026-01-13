@@ -189,6 +189,57 @@ class Database():
             connection.commit()
             return result.rowcount > 0  # Returns True if a row was deleted
         
+    def get_suggested_tract_groupings(self, tracts):
+        """
+        Returns suggested tract groupings queries.
+        
+        :param tracts: list of tract GEOIDs
+        :return: list of dicts with grouping suggestions
+        """
+        if not tracts:
+            return []
+        
+        # Query to find neighboring tracts (tracts that share a boundary)
+        placeholders = ','.join(['%s'] * len(tracts))
+        
+        neighboring_query = f"""
+            WITH input_tracts AS (
+                SELECT t1."GEOID", t1.geometry
+                FROM tracts_2023 t1
+                WHERE t1."GEOID" IN ({placeholders})
+            ),
+            neighboring_tracts AS (
+                SELECT DISTINCT
+                    t2."GEOID" AS neighbor_geoid
+                FROM input_tracts it
+                JOIN tracts_2023 t2
+                    ON ST_Touches(it.geometry, t2.geometry)
+                WHERE t2."GEOID" NOT IN ({placeholders})
+            )
+            SELECT neighbor_geoid
+            FROM neighboring_tracts
+            ORDER BY neighbor_geoid;
+        """
+        
+        results = self.query(neighboring_query, tuple(tracts) + tuple(tracts))
+        neighbor_geoids = [r['neighbor_geoid'] for r in results.to_dict(orient='records')]
+        suggestions = [
+            {
+                'id': 1,
+                'type': 'neighboring_tracts',
+                'description': 'Tracts that share a boundary with your selected tracts',
+                'tracts': neighbor_geoids
+            },
+            {
+                'id': 2,
+                'type': 'neighboring_tracts_copy',
+                'description': 'Tracts that share a boundary with your selected tracts',
+                'tracts': neighbor_geoids[:10]
+            }
+        ]
+        
+        return suggestions
+        
     def get_demographics(self, tracts):
         """
         Retrieves demographics for a list of tracts from pdb2023tr table

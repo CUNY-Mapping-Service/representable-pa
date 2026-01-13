@@ -34,6 +34,13 @@ export interface DemographicsResponse {
   by_tract: TractDemographics[]
 }
 
+export interface TractSuggestion {
+  description: string
+  tracts: string[]
+  type: string
+  id: number
+}
+
 export const useTurfStore = defineStore('turf', () => {
   const turfs = ref<Turf[]>([])
   const selectedTurf = ref<Turf | null>(null)
@@ -45,6 +52,8 @@ export const useTurfStore = defineStore('turf', () => {
   const demographics = ref<DemographicsResponse | null>(null)
   const loadingDemographics = ref(false)
   const demographicsError = ref<string | null>(null)
+
+  const suggestions = ref<TractSuggestion[]>([])
 
   async function loadTurfs() {
     fetch(API_BASE_ROUTE + '/edit')
@@ -226,11 +235,22 @@ export const useTurfStore = defineStore('turf', () => {
     }
   }
 
+  async function fetchSuggestions() {
+    if (selectedTurf.value?.id){
+       fetch(API_BASE_ROUTE + '/suggestions/' + selectedTurf.value?.id)
+      .then((res) => res.json())
+      .then((data) => suggestions.value = data.suggestions)
+    }
+    return []
+  }
+
   watch(selectedTurf, (newTurf) => {
     if (newTurf) {
       fetchDemographics()
+      fetchSuggestions()
     } else {
       demographics.value = null
+      suggestions.value = []
     }
   })
 
@@ -248,5 +268,7 @@ export const useTurfStore = defineStore('turf', () => {
     loadingDemographics,
     demographicsError,
     fetchDemographics,
+    fetchSuggestions,
+    suggestions
   }
 })

@@ -61,7 +61,7 @@ watch(selectedTurf, (newTurf) => {
     ) {
         map.value.fitBounds(
             [
-                [newTurf.min_lon, newTurf.min_lat], 
+                [newTurf.min_lon, newTurf.min_lat],
                 [newTurf.max_lon, newTurf.max_lat]
             ],
             {
@@ -117,6 +117,12 @@ function applyModeSettings(newMode: string) {
         case 'view':
             map.value.setLayoutProperty("turf-layer", "visibility", 'visible');
             map.value.setLayoutProperty("tract-layer", 'visibility', 'none');
+            map.value.setLayoutProperty("tract-hover-layer", 'visibility', 'none');
+            updateTractColors()
+            break
+        case 'suggestion':
+            map.value.setLayoutProperty("turf-layer", "visibility", 'visible');
+            map.value.setLayoutProperty("tract-layer", 'visibility', 'visible');
             map.value.setLayoutProperty("tract-hover-layer", 'visibility', 'none');
             updateTractColors()
             break
@@ -290,6 +296,14 @@ function updateTractColors() {
         map.value.setFilter('turf-layer', null);
     } else if (mode.value === 'view' && selectedTurf.value) {
         map.value.setFilter('turf-layer', ['==', ['get', 'id'], selectedTurf.value.id]);
+    } else if (mode.value === 'suggestion' && selectedTurf.value) {
+        map.value.setFilter('turf-layer', ['==', ['get', 'id'], selectedTurf.value.id]);
+        selectedTracts.value.forEach(tractId => {
+            map.value!.setFeatureState(
+                { source: 'tracts', sourceLayer: 'tracts_2023', id: tractId },
+                { selected: true }
+            );
+        });
     } else if (mode.value === 'edit') {
         selectedTracts.value.forEach(tractId => {
             map.value!.setFeatureState(

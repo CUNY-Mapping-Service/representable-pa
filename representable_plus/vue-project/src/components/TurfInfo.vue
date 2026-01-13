@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import Map from '@/components/Map.vue'
 import { useMapStore } from '@/stores/map';
 import { useTurfStore } from '@/stores/turf';
 import { storeToRefs } from 'pinia';
@@ -10,7 +9,7 @@ import { computed } from 'vue';
 
 const { setMode } = useMapStore()
 const turfStore = useTurfStore()
-const { selectedTurf, demographics, loadingDemographics, demographicsError } = storeToRefs(turfStore)
+const { selectedTurf, demographics, loadingDemographics, demographicsError, suggestions } = storeToRefs(turfStore)
 
 const getCategories = computed(() => {
     return [...new Set(demographicMetrics.map((metric) => metric.category))];
@@ -32,7 +31,11 @@ const getMetricsByCategory = (category: string) => {
     </div>
     <SearchTurfs />
     <!-- if a turf is selected. show a close button and information about the turf, allow the user to edit -->
+     <div v-if="selectedTurf && suggestions" style="position: fixed; top: 3rem; right: 0; z-index: 99;">
+            <div class="floating" @click="setMode('suggestion')">ℹ️</div>
+        </div>
     <div v-if="selectedTurf" class="turf-details mt-3" style="position: relative;">
+        <!-- Edit Turf and close button, move down? -->
         <div style="display:flex;  position: absolute; top: 0; right: 0;">
             <button class="button is-primary is-small" @click="setMode('edit')">
                 <span>Edit Turf</span>
@@ -57,7 +60,7 @@ const getMetricsByCategory = (category: string) => {
             Created: {{ formatDate(selectedTurf.createdAt) }}
         </p>
 
-           <div v-if="selectedTurf" class="demographic-metrics mt-3">
+        <div v-if="selectedTurf" class="demographic-metrics mt-3">
             <div v-if="loadingDemographics">Loading...</div>
             <div v-else-if="demographicsError" class="has-text-danger">{{ demographicsError }}</div>
             <div v-else-if="demographics?.aggregated">
@@ -163,5 +166,27 @@ const getMetricsByCategory = (category: string) => {
 .comparison-table thead th {
     background-color: #f5f5f5;
     font-weight: 600;
+}
+
+.floating {
+    display: inline-block;
+    cursor: pointer;
+    background: #fff;
+    padding: 0.75rem 0 0.75rem 1rem;
+    border-radius: 8px 0 0 8px;
+    box-shadow:
+        -6px -4px 10px rgba(0, 0, 0, 0.10),
+        -2px -2px 4px rgba(0, 0, 0, 0.06),
+        0 8px 18px rgba(0, 0, 0, 0.14),
+        0 3px 6px rgba(0, 0, 0, 0.06);
+
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.floating:hover {
+    transform: translateY(-3px);
+    box-shadow:
+        -8px -6px 14px rgba(0, 0, 0, 0.12),
+        0 12px 28px rgba(0, 0, 0, 0.18);
 }
 </style>
