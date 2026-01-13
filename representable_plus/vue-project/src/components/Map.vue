@@ -50,6 +50,29 @@ watch([selectedTracts, turfs, selectedTurf, mode], () => {
     updateTractColors();
 }, { deep: true });
 
+watch(selectedTurf, (newTurf) => {
+    if (!map.value || !isMapReady.value || !newTurf) return;
+
+    if (
+        newTurf.min_lon !== undefined &&
+        newTurf.min_lat !== undefined &&
+        newTurf.max_lon !== undefined &&
+        newTurf.max_lat !== undefined
+    ) {
+        map.value.fitBounds(
+            [
+                [newTurf.min_lon, newTurf.min_lat], 
+                [newTurf.max_lon, newTurf.max_lat]
+            ],
+            {
+                padding: 50,
+                duration: 1000,
+                maxZoom: 13
+            }
+        );
+    }
+});
+
 // Create a map of tract IDs to turf names for view mode
 function getTractToTurfMap() {
     const tractMap = new Map<string, string[]>();
