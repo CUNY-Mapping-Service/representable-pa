@@ -1,13 +1,20 @@
+import type { GeoJSONFeature } from 'maplibre-gl'
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 export interface Turf {
   id: string
+  organization_id?: number | null,
   name: string
   details: string
   tracts: string[]
-  createdAt: string
+  createdAt: string,
+  geometry?: GeoJSONFeature,
+  max_lat?: number,
+  max_lon?: number,
+  min_lat?: number,
+  min_lon?: number
 }
 
 export const useTurfStore = defineStore('turf', () => {
@@ -22,13 +29,16 @@ export const useTurfStore = defineStore('turf', () => {
     fetch(API_BASE_ROUTE + '/edit')
       .then((res) => res.json())
       .then((data) => {
-        turfs.value = data.map((row: any) => ({
-          id: row.id,
-          name: row.description.name || '',
-          details: row.description.details || '',
-          createdAt: row.description.createdAt,
-          tracts: row.tracts,
-        }))
+        turfs.value = data.map((row: any) => {
+          const {id, tracts, geometry, max_lat, max_lon, min_lat, min_lon} = row
+
+          return {
+            id, tracts, geometry, max_lat, max_lon, min_lat, min_lon,
+            name: row.description.name || '',
+            details: row.description.details || '',
+            createdAt: row.description.createdAt
+          }}
+        )
       })
       .catch((error) => console.error('Error loading turfs from api:', error))
   }

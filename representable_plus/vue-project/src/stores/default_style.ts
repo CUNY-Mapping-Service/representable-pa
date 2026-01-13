@@ -31,6 +31,13 @@ const STYLE = {
                 "http://localhost:3000/tracts_2023/{z}/{x}/{y}",
             ],
         },
+        turfs: {
+            'type': 'geojson',
+            'data': {
+                "type": "FeatureCollection",
+                "features": []
+            }
+        }
     },
     sprite: "https://openmaptiles.github.io/positron-gl-style/sprite",
     glyphs: "https://tiles.openstreetmap.us/fonts/{fontstack}/{range}.pbf",
@@ -751,6 +758,16 @@ const STYLE = {
             "source-layer": "tracts_2023",
             layout: { visibility: "none" },
             paint: {},
+        },
+        {
+            'id': 'turf-layer',
+            'type': 'fill',
+            'source': 'turfs',
+            'paint': {
+                'fill-color': ['get', 'color'],
+                'fill-opacity': 0.3,
+                'fill-outline-color': ['get', 'outlineColor']
+            }
         },
         {
             'id': 'tract-layer',

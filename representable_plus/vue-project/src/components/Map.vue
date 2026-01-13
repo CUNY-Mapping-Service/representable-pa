@@ -3,9 +3,10 @@ import { useMapStore } from '@/stores/map';
 import { useTurfStore } from '@/stores/turf';
 import { AttributionControl, Map as MaplibreMap, NavigationControl, Popup } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, toRaw, watch } from 'vue';
 import STYLE from '@/stores/default_style';
 import { storeToRefs } from 'pinia';
+import * as d3 from "d3";
 
 const GEOID_FIELD = 'GEOID' // must match the promoteId
 const mapCenter = ref<[number, number]>([-75.2038894, 39.962347])
@@ -45,13 +46,9 @@ onMounted(() => {
     });
 })
 
-watch(selectedTracts, () => {
+watch([selectedTracts, turfs, selectedTurf, mode], () => {
     updateTractColors();
 }, { deep: true });
-
-watch(turfs, () => {
-    updateTractColors();
-})
 
 // Create a map of tract IDs to turf names for view mode
 function getTractToTurfMap() {
@@ -89,18 +86,19 @@ function applyModeSettings(newMode: string) {
         case 'edit':
             // set the selected tracts
             selectedTracts.value = selectedTurf.value?.tracts ?? []
-
+            map.value.setLayoutProperty("turf-layer", "visibility", 'none');
             map.value.setLayoutProperty("tract-layer", "visibility", 'visible');
             map.value.setLayoutProperty("tract-hover-layer", "visibility", 'visible');
             updateTractColors();
             break
         case 'view':
-            // todo have a tract unioned layer for better rendering 
-            map.value.setLayoutProperty("tract-layer", 'visibility', 'visible');
+            map.value.setLayoutProperty("turf-layer", "visibility", 'visible');
+            map.value.setLayoutProperty("tract-layer", 'visibility', 'none');
             map.value.setLayoutProperty("tract-hover-layer", 'visibility', 'none');
             updateTractColors()
             break
         default:
+            map.value.setLayoutProperty("turf-layer", "visibility", 'visible');
             map.value.setLayoutProperty("tract-layer", 'visibility', 'none');
             map.value.setLayoutProperty("tract-hover-layer", 'visibility', 'none');
     }
@@ -119,36 +117,33 @@ function setupViewModeInteraction() {
         if (!map.value || mode.value !== 'view') return;
 
         const features = map.value.queryRenderedFeatures(e.point, {
-            layers: ['tract-layer']
+            layers: ['tract-layer', 'turf-layer']
         });
 
+        // Close existing popup
+        if (currentPopup) currentPopup.remove();
+
         if (features.length > 0) {
-            const tractId = features[0]?.properties?.[GEOID_FIELD];
-            const tractMap = getTractToTurfMap();
-            const turfNames = tractMap.get(tractId) || [];
+            const names = features.filter(d => d.layer.id === 'turf-layer').map(d => d.properties.name)
+            // const tractId = features.find(d => d.layer.id === 'tract-layer')?.properties.tract
 
-            if (turfNames.length > 0) {
-                // Close existing popup
-                if (currentPopup) {
-                    currentPopup.remove();
-                }
 
-                // Create popup content
-                const popupContent = `
-                    <div style="padding: 4px;">
-                        <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Tract: ${tractId}</div>
-                        <div style="margin-top: 2px;">
-                            ${turfNames.map(name => `<div style="font-size: 0.85rem; padding: 2px 0;">• ${name}</div>`).join('')}
-                        </div>
+
+            // Create popup content
+            const popupContent = `
+                <div style="padding: 4px;">
+                    <div style="margin-top: 2px;">
+                        ${names.map(name => `<div style="font-size: 0.85rem; padding: 2px 0;">• ${name}</div>`).join('')}
                     </div>
-                `;
+                </div>
+            `;
 
-                currentPopup = new Popup({ closeButton: true, closeOnClick: false })
-                    .setLngLat(e.lngLat)
-                    .setHTML(popupContent)
-                    .addTo(map.value);
-            }
+            currentPopup = new Popup({ closeButton: true, closeOnClick: false })
+                .setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map.value);
         }
+
     };
 
     const handleViewHover = (e: any) => {
@@ -161,9 +156,9 @@ function setupViewModeInteraction() {
         map.value.getCanvas().style.cursor = '';
     };
 
-    map.value.on('click', 'tract-layer', handleViewClick);
-    map.value.on('mouseenter', 'tract-layer', handleViewHover);
-    map.value.on('mouseleave', 'tract-layer', handleViewLeave);
+    map.value.on('click', handleViewClick);
+    map.value.on('mouseenter', handleViewHover);
+    map.value.on('mouseleave', handleViewLeave);
 }
 
 function setupEditModeInteraction() {
@@ -226,29 +221,53 @@ function undo() {
     }
 }
 
+
+function getTurfColor(index: number): string {
+    const colors = d3.schemeTableau10;
+    return colors[index % colors.length] ?? '';
+}
+
+function getTurfOutlineColor(fillColor: string): string {
+    const d3Color = d3.color(fillColor);
+    if (d3Color) {
+        return d3Color.darker(1.5).formatHex();
+    }
+    return '#333';
+}
+
+
 function updateTractColors() {
     if (!map.value || !isMapReady.value) return;
+
+    const featureCollection = {
+        "type": "FeatureCollection",
+        "features": toRaw(turfs.value).map((d, index) => {
+            const fillColor = getTurfColor(index);
+            const outlineColor = getTurfOutlineColor(fillColor);
+            return {
+                type: "Feature",
+                properties: {
+                    name: d.name,
+                    id: d.id,
+                    color: fillColor,
+                    outlineColor: outlineColor
+                },
+                geometry: d.geometry
+            };
+        })
+    }
+
+    // @ts-expect-error setData does not exist
+    map.value.getSource('turfs')?.setData(featureCollection);
 
     // Clear all feature states first
     clearAllFeatureStates();
 
-    if (mode.value === 'view') {
-        // In view mode, show all tracts from all turfs with overlap count
-        const tractMap = getTractToTurfMap();
-        tractMap.forEach((turfNames, tractId) => {
-            // Cap overlap count at 3
-            const overlapCount = Math.min(turfNames.length, 3);
-
-            map.value!.setFeatureState(
-                { source: 'tracts', sourceLayer: 'tracts_2023', id: tractId },
-                {
-                    selected: true,
-                    overlapCount: overlapCount
-                }
-            );
-        });
+    if (mode.value === 'view' && !selectedTurf.value) {
+        map.value.setFilter('turf-layer', null);
+    } else if (mode.value === 'view' && selectedTurf.value) {
+        map.value.setFilter('turf-layer', ['==', ['get', 'id'], selectedTurf.value.id]);
     } else if (mode.value === 'edit') {
-        // In edit mode, show selected tracts
         selectedTracts.value.forEach(tractId => {
             map.value!.setFeatureState(
                 { source: 'tracts', sourceLayer: 'tracts_2023', id: tractId },

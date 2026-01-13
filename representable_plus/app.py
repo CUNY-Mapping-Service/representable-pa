@@ -62,6 +62,57 @@ def edit_turf(user_name, user_id, org_name, org_id):
         else:
             return jsonify({"error": "Record not found"}), 404
         
+@app.route("/api/demographics", methods=['GET', 'POST'])
+@with_user_info
+def get_demographics(user_name, user_id, org_name, org_id):
+    allowed_org_id = db.has_permissions_to_access_org(org_id, user_id)
+    
+    if allowed_org_id is False:
+        return jsonify({"error": "Access denied"}), 403
+
+    org_id = allowed_org_id
+    
+    if request.method == 'GET':
+        # GET method for record_id queries
+        record_id = request.args.get('record_id')
+        
+        if not record_id:
+            return jsonify({"error": "record_id parameter is required for GET requests"}), 400
+        
+        # Fetch the record to get its tracts
+        records = db.get_records(org_id)
+        record = next((r for r in records if r['id'] == int(record_id)), None)
+        
+        if not record:
+            return jsonify({"error": "Record not found"}), 404
+        
+        tracts = record.get('tracts', [])
+        
+    elif request.method == 'POST':
+        # POST method for both record_id and tracts
+        data = request.json
+        record_id = data.get('record_id')
+        tracts = data.get('tracts')
+        
+        if record_id:
+            # Fetch the record to get its tracts
+            records = db.get_records(org_id)
+            record = next((r for r in records if r['id'] == int(record_id)), None)
+            
+            if not record:
+                return jsonify({"error": "Record not found"}), 404
+            
+            tracts = record.get('tracts', [])
+        elif tracts:
+            # Use provided tracts list
+            if not isinstance(tracts, list):
+                return jsonify({"error": "tracts must be an array"}), 400
+        else:
+            return jsonify({"error": "Either record_id or tracts is required"}), 400
+    
+    demographics = db.get_demographics(tracts)
+    return jsonify(demographics)
+
 
 # serve Vue static files, keep at the end
 @app.route('/', defaults={'path': ''})
