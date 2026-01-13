@@ -290,41 +290,7 @@ class Database():
             'pct_eng_vw_api_acs_17_21': round(total_api / total_pop_5_over * 100, 2) if total_pop_5_over > 0 else 0,
         }
         
-        # Calculate percentages for each tract
-        by_tract = []
-        for d in demographics_list:
-            pop_cen = d.get('Tot_Population_CEN_2020', 0) or 0
-            pop_acs = d.get('Tot_Population_ACS_17_21', 0) or 0
-            pop_5_over = d.get('Pop_5yrs_Over_ACS_17_21', 0) or 0
-            pov_univ = d.get('Pov_Univ_ACS_17_21', 0) or 0
-            family_hhd = d.get('Rel_Family_HHD_ACS_17_21', 0) or 0
-            occupied = d.get('Tot_Occp_Units_ACS_17_21', 0) or 0
-            housing = d.get('Tot_Housing_Units_ACS_17_21', 0) or 0
-            
-            tract_data = {
-                'geoid': d.get('GIDTR'),
-                'state_name': d.get('State_name'),
-                'county_name': d.get('County_name'),
-                'tract': d.get('Tract'),
-                'tot_population_cen_2020': int(pop_cen),
-                'pct_hispanic_cen_2020': round((d.get('Hispanic_CEN_2020', 0) or 0) / pop_cen * 100, 2) if pop_cen > 0 else 0,
-                'pct_nh_blk_alone_cen_2020': round((d.get('NH_Blk_alone_CEN_2020', 0) or 0) / pop_cen * 100, 2) if pop_cen > 0 else 0,
-                'pct_nh_asian_alone_cen_2020': round((d.get('NH_Asian_alone_CEN_2020', 0) or 0) / pop_cen * 100, 2) if pop_cen > 0 else 0,
-                'pct_nh_aian_alone_cen_2020': round((d.get('NH_AIAN_alone_CEN_2020', 0) or 0) / pop_cen * 100, 2) if pop_cen > 0 else 0,
-                'pct_born_foreign_acs_17_21': round((d.get('Born_foreign_ACS_17_21', 0) or 0) / pop_acs * 100, 2) if pop_acs > 0 else 0,
-                'pct_prs_blw_pov_lev_acs_17_21': round((d.get('Prs_Blw_Pov_Lev_ACS_17_21', 0) or 0) / pov_univ * 100, 2) if pov_univ > 0 else 0,
-                'pct_rel_family_hhd_cen_2020': round((d.get('Rel_Child_Under_6_ACS_17_21', 0) or 0) / family_hhd * 100, 2) if family_hhd > 0 else 0,
-                'pct_crowd_occp_u_acs_17_21': round((d.get('Crowd_Occp_U_ACS_17_21', 0) or 0) / occupied * 100, 2) if occupied > 0 else 0,
-                'pct_mlt_u2_9_strc_acs_17_21': round((d.get('MLT_U2_9_STRC_ACS_17_21', 0) or 0) / housing * 100, 2) if housing > 0 else 0,
-                'pct_mlt_u10p_acs_17_21': round((d.get('MLT_U10p_ACS_17_21', 0) or 0) / housing * 100, 2) if housing > 0 else 0,
-                'pct_eng_vw_acs_17_21': round((d.get('ENG_VW_ACS_17_21', 0) or 0) / pop_5_over * 100, 2) if pop_5_over > 0 else 0,
-                'pct_eng_vw_span_acs_17_21': round((d.get('ENG_VW_SPAN_ACS_17_21', 0) or 0) / pop_5_over * 100, 2) if pop_5_over > 0 else 0,
-                'pct_eng_vw_indoeuro_acs_17_21': round((d.get('ENG_VW_INDO_EURO_ACS_17_21', 0) or 0) / pop_5_over * 100, 2) if pop_5_over > 0 else 0,
-                'pct_eng_vw_api_acs_17_21': round((d.get('ENG_VW_API_ACS_17_21', 0) or 0) / pop_5_over * 100, 2) if pop_5_over > 0 else 0,
-            }
-            by_tract.append(tract_data)
-        
         return {
             "aggregated": aggregated,
-            "by_tract": by_tract
+            "by_tract": [] # by_tract - no longer needed
         }

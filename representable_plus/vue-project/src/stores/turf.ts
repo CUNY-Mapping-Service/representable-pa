@@ -1,20 +1,37 @@
+import { demographicsApi } from '@/services/api'
 import type { GeoJSONFeature } from 'maplibre-gl'
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 export interface Turf {
-  id: string
-  organization_id?: number | null,
+  id: number
+  organization_id?: number | null
   name: string
   details: string
   tracts: string[]
-  createdAt: string,
-  geometry?: GeoJSONFeature,
-  max_lat?: number,
-  max_lon?: number,
-  min_lat?: number,
+  createdAt: string
+  geometry?: GeoJSONFeature
+  max_lat?: number
+  max_lon?: number
+  min_lat?: number
   min_lon?: number
+}
+
+export interface DemographicMetrics {
+  [key: string]: number | string
+}
+
+export interface TractDemographics extends DemographicMetrics {
+  geoid: number
+  tract: number
+  county_name: string
+  state_name: string
+}
+
+export interface DemographicsResponse {
+  aggregated: DemographicMetrics
+  by_tract: TractDemographics[]
 }
 
 export const useTurfStore = defineStore('turf', () => {
@@ -25,20 +42,30 @@ export const useTurfStore = defineStore('turf', () => {
   const API_BASE_ROUTE =
     route.path === '/' ? 'http://127.0.0.1:8000/partners/test/turf/api' : './api'
 
+  const demographics = ref<DemographicsResponse | null>(null)
+  const loadingDemographics = ref(false)
+  const demographicsError = ref<string | null>(null)
+
   async function loadTurfs() {
     fetch(API_BASE_ROUTE + '/edit')
       .then((res) => res.json())
       .then((data) => {
         turfs.value = data.map((row: any) => {
-          const {id, tracts, geometry, max_lat, max_lon, min_lat, min_lon} = row
+          const { id, tracts, geometry, max_lat, max_lon, min_lat, min_lon } = row
 
           return {
-            id, tracts, geometry, max_lat, max_lon, min_lat, min_lon,
+            id,
+            tracts,
+            geometry,
+            max_lat,
+            max_lon,
+            min_lat,
+            min_lon,
             name: row.description.name || '',
             details: row.description.details || '',
-            createdAt: row.description.createdAt
-          }}
-        )
+            createdAt: row.description.createdAt,
+          }
+        })
       })
       .catch((error) => console.error('Error loading turfs from api:', error))
   }
@@ -104,7 +131,7 @@ export const useTurfStore = defineStore('turf', () => {
   }
 
   async function updateTurf(
-    id: string,
+    id: number,
     turfData: { name: string; details: string; tracts: string[] },
   ) {
     try {
@@ -149,7 +176,7 @@ export const useTurfStore = defineStore('turf', () => {
     }
   }
 
-  async function deleteTurf(id: string) {
+  async function deleteTurf(id: number) {
     try {
       const response = await fetch(API_BASE_ROUTE + `/edit?id=${id}`, {
         method: 'DELETE',
@@ -174,6 +201,39 @@ export const useTurfStore = defineStore('turf', () => {
     }
   }
 
+  async function fetchDemographics() {
+    if (!selectedTurf.value?.tracts || selectedTurf.value.tracts.length === 0) {
+      demographics.value = null
+      return
+    }
+
+    loadingDemographics.value = true
+    demographicsError.value = null
+
+    try {
+      // Use record_id if available, otherwise use tracts array
+      const data = selectedTurf.value.id
+        ? await demographicsApi.getByRecordId(selectedTurf.value.id)
+        : await demographicsApi.getByTracts(selectedTurf.value.tracts)
+
+      demographics.value = data
+    } catch (error) {
+      console.error('Failed to fetch demographics:', error)
+      demographicsError.value = 'Failed to load demographic data'
+      demographics.value = null
+    } finally {
+      loadingDemographics.value = false
+    }
+  }
+
+  watch(selectedTurf, (newTurf) => {
+    if (newTurf) {
+      fetchDemographics()
+    } else {
+      demographics.value = null
+    }
+  })
+
   return {
     turfs,
     sortedTurfs,
@@ -184,5 +244,9 @@ export const useTurfStore = defineStore('turf', () => {
     addTurf,
     updateTurf,
     deleteTurf,
+    demographics,
+    loadingDemographics,
+    demographicsError,
+    fetchDemographics,
   }
 })

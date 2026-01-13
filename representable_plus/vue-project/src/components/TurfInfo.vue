@@ -5,10 +5,20 @@ import { useTurfStore } from '@/stores/turf';
 import { storeToRefs } from 'pinia';
 import SearchTurfs from './SearchTurfs.vue';
 import { formatDate } from '@/utils';
+import { demographicMetrics } from '@/stores/metrics';
+import { computed } from 'vue';
 
-const {setMode} = useMapStore()
+const { setMode } = useMapStore()
 const turfStore = useTurfStore()
-const { selectedTurf } = storeToRefs(turfStore)
+const { selectedTurf, demographics, loadingDemographics, demographicsError } = storeToRefs(turfStore)
+
+const getCategories = computed(() => {
+    return [...new Set(demographicMetrics.map((metric) => metric.category))];
+});
+
+const getMetricsByCategory = (category: string) => {
+    return demographicMetrics.filter((metric) => metric.category === category);
+};
 
 </script>
 
@@ -46,6 +56,25 @@ const { selectedTurf } = storeToRefs(turfStore)
         <p class="is-size-7 has-text-grey" v-if="selectedTurf.createdAt">
             Created: {{ formatDate(selectedTurf.createdAt) }}
         </p>
+
+           <div v-if="selectedTurf" class="demographic-metrics mt-3">
+            <div v-if="loadingDemographics">Loading...</div>
+            <div v-else-if="demographicsError" class="has-text-danger">{{ demographicsError }}</div>
+            <div v-else-if="demographics?.aggregated">
+                <div v-for="category in getCategories" :key="category" class="mb-4">
+                    <h6 class="subtitle is-6">{{ category }}</h6>
+                    <table class="table is-fullwidth is-bordered comparison-table">
+                        <tbody>
+                            <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
+                                <td class="metric-name">{{ metric.name }}</td>
+                                <td class="metric-value">{{ demographics.aggregated[metric.id] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div v-else>No demographic data available.</div>
+        </div>
     </div>
 
 </template>
@@ -117,5 +146,22 @@ const { selectedTurf } = storeToRefs(turfStore)
 
 .tag {
     font-size: 0.65rem;
+}
+
+.comparison-table {
+    font-size: 0.875rem;
+}
+
+.comparison-table .metric-name {
+    font-weight: 500;
+}
+
+.comparison-table .metric-value {
+    font-family: monospace;
+}
+
+.comparison-table thead th {
+    background-color: #f5f5f5;
+    font-weight: 600;
 }
 </style>
