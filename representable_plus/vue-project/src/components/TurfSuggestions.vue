@@ -57,8 +57,9 @@ const formatValue = (value: any) => {
     return format(Number(value))
 }
 
-async function loadSuggestionData(index: number, tracts: string[]) {
+async function loadSuggestionData(index: number, suggestedTracts: string[]) {
     if (suggestionDemographics.value[index]) return // Already loaded
+    const tracts = [...suggestedTracts, ...selectedTurf.value?.tracts ?? []]
 
     loadingStates.value[index] = true
     try {

@@ -233,7 +233,7 @@ class Database():
             {
                 'id': 2,
                 'type': 'neighboring_tracts_copy',
-                'description': 'Tracts that share a boundary with your selected tracts',
+                'description': 'Tracts that share a boundary with your selected tracts. Limited to 10',
                 'tracts': neighbor_geoids[:10]
             }
         ]
