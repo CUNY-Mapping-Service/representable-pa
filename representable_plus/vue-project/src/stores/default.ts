@@ -6,13 +6,13 @@ export const useDefaultStore = defineStore('map', () => {
   const map: Ref<MaplibreMap | undefined> = ref()
   const selectedTracts: Ref<string[]> = ref([])
   const mode: Ref<string> = ref('view')
+  const choroplethMetric: Ref<string | null> = ref(null)
 
   function setMode(newMode: string) {
     mode.value = newMode
 
     switch (newMode) {
       case 'view':
-        
         break
       default:
         break
@@ -23,9 +23,13 @@ export const useDefaultStore = defineStore('map', () => {
     map.value = markRaw(mapInstance)
   }
 
-  function setSelectedTracts(tracts: string[]){
+  function setSelectedTracts(tracts: string[]) {
     selectedTracts.value = tracts
   }
 
-  return { map, selectedTracts, setSelectedTracts, setMap, setMode, mode }
+  function setChoroplethMetric(metric: null | string){
+    choroplethMetric.value = metric
+  }
+
+  return { map, selectedTracts, setSelectedTracts, setChoroplethMetric, setMap, setMode, mode, choroplethMetric }
 })

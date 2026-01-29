@@ -98,8 +98,9 @@ function applyModeSettings(newMode: string) {
     }
 
     selectionHistory.value = []
-
+    map.value.setLayoutProperty('tract-choropleth', 'visibility', 'none');
     switch (newMode) {
+
         case 'edit':
             // set the selected tracts
             selectedTracts.value = props.selectedTurf?.tracts ?? []
@@ -111,12 +112,6 @@ function applyModeSettings(newMode: string) {
         case 'view':
             map.value.setLayoutProperty("turf-layer", "visibility", 'visible');
             map.value.setLayoutProperty("tract-layer", 'visibility', 'none');
-            map.value.setLayoutProperty("tract-hover-layer", 'visibility', 'none');
-            updateTractColors()
-            break
-        case 'suggestion':
-            map.value.setLayoutProperty("turf-layer", "visibility", 'visible');
-            map.value.setLayoutProperty("tract-layer", 'visibility', 'visible');
             map.value.setLayoutProperty("tract-hover-layer", 'visibility', 'none');
             updateTractColors()
             break
@@ -264,7 +259,7 @@ function updateTractColors() {
         map.value.setFilter('turf-layer', null);
     } else if (mode.value === 'view' && props.selectedTurf) {
         map.value.setFilter('turf-layer', ['==', ['get', 'id'], props.selectedTurf.id]);
-    } else if (['suggestion', 'edit'].includes(mode.value) && props.selectedTurf) {
+    } else if (mode.value === 'edit' && props.selectedTurf) {
         map.value.setFilter('turf-layer', ['==', ['get', 'id'], props.selectedTurf.id]);
         selectedTracts.value.forEach(tractId => {
             map.value!.setFeatureState(

@@ -9,6 +9,7 @@ import { getTurfColor, getTurfOutlineColor } from '@/utils/colors';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onMounted, ref } from 'vue';
 import EditTurfOverlay from '@/components/EditTurfOverlay.vue';
+import InteractiveMapChoroplethForSuggestion from '@/components/InteractiveMapChoroplethForSuggestion.vue';
 
 const defaultStore = useDefaultStore()
 const { mode } = storeToRefs(defaultStore)
@@ -104,7 +105,9 @@ const handleSuggestionsBack = () => {
 <template>
     <main>
         <div class="map-container" :class="[modeMapSize]">
-            <InteractiveMap :turfs="turfs as TurfWithColors[]" :selectedTurf="selectedTurf as TurfWithColors" />
+            <InteractiveMapChoroplethForSuggestion :turfs="turfs as TurfWithColors[]"
+                :selectedTurf="selectedTurf as TurfWithColors" v-if="mode === 'suggestion'" />
+            <InteractiveMap :turfs="turfs as TurfWithColors[]" :selectedTurf="selectedTurf as TurfWithColors" v-else />
         </div>
         <div class="overlay">
             <div class="buttons" v-show="!!selectedTurf && mode === 'view'">
@@ -284,7 +287,7 @@ main {
     background-color: rgb(233, 233, 233);
 }
 
-..overlay {
+.overlay {
     position: absolute;
     inset: 0;
     pointer-events: none;

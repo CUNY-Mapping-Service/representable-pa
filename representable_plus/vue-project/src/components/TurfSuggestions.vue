@@ -35,7 +35,7 @@ const formatNumber = (raw: unknown) => {
 };
 
 const defaultStore = useDefaultStore();
-const { selectedTracts } = storeToRefs(defaultStore);
+const { selectedTracts, choroplethMetric } = storeToRefs(defaultStore);
 
 const suggestions = ref<TractSuggestion[]>([]);
 const suggestionsLoading = ref(false);
@@ -183,7 +183,8 @@ onMounted(() => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
+                        <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id"
+                            :class="{ 'hover-row': true, 'clicked-row': choroplethMetric === metric.id}" @click="defaultStore.setChoroplethMetric(metric.id)">
                             <td class="metric-name metric-col">{{ metric.name }}</td>
                             <td class="metric-value value-col has-text-centered">
                                 {{ formatNumber(demographics?.aggregated?.[metric.id]) }}
@@ -320,7 +321,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.container{
+.container {
     padding-bottom: 0.8rem;
     margin-bottom: 1rem;
     border-bottom: solid 1px #e4e4e4;
@@ -456,5 +457,14 @@ onMounted(() => {
 
 .current-demographics-table .metric-value {
     font-family: monospace;
+}
+
+.hover-row:hover{
+    cursor: pointer;
+    background-color: #dadada;
+}
+
+.clicked-row{
+    background-color: #dadada;
 }
 </style>
