@@ -13,7 +13,7 @@ const turfStore = useTurfStore()
 const { suggestions, selectedTurf, demographics } = storeToRefs(turfStore)
 
 const loadingStates: Ref<Record<number, boolean>> = ref({})
-const suggestionDemographics: Ref<Record<number, DemographicsResponse | null>> = ref({})
+const suggestionDemographics: Ref<Record<number, any>> = ref({})
 const previewedSuggestionId: Ref<number> = ref(0)
 
 const getCategories = computed(() => {

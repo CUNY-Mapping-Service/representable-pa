@@ -17,10 +17,11 @@
 
                     <div class="dropdown-content">
                         <div v-for="turf in filteredTurfs" :key="turf.id" class="dropdown-item"
-                            :class="{ 'is-active': selectedTurf?.id === turf.id }" @click="selectTurf(turf)">
+                            :class="{ 'is-active': selectedTurf?.id === turf.id }"
+                            @click="selectTurf(turf as TurfWithColors)">
                             <div class="turf-info">
                                 <span class="text">{{ turf.name }}</span>
-                                <span class="turf-meta" v-if="turf.id !== 'none'">
+                                <span class="turf-meta" v-if="turf.id">
                                     {{ turf.tracts?.length || 0 }} tract(s)
                                 </span>
                             </div>
@@ -40,6 +41,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useTurfStore, type Turf } from '@/stores/turf';
 import { storeToRefs } from 'pinia';
+import type { TurfWithColors } from '@/views/Landing.vue';
 
 const isOpen = ref(false);
 const searchQuery = ref('');
@@ -71,7 +73,7 @@ function toggleDropdown() {
         // Reload turfs when opening dropdown to get latest data
         turfStore.loadTurfs();
         filteredTurfs.value = availableTurfs.value;
-        
+
         setTimeout(() => {
             searchInput.value?.focus();
         }, 100);

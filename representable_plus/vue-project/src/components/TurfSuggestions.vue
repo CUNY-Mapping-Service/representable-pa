@@ -28,7 +28,7 @@ const suggestionsLoading = ref(false);
 const suggestionsError = ref<string | null>(null);
 
 const loadingStates: Ref<Record<number, boolean>> = ref({});
-const suggestionDemographics: Ref<Record<number, DemographicsResponse | null>> = ref({});
+const suggestionDemographics: Ref<Record<number, any>> = ref({});
 const previewedSuggestionId: Ref<number | null> = ref(null);
 const demographics: Ref<DemographicsResponse | null> = ref(null);
 
