@@ -6,7 +6,7 @@ import { useTurfStore } from '@/stores/turf';
 import { storeToRefs } from 'pinia';
 import TurfInfo from '@/components/TurfInfo.vue';
 import TurfEdit from '@/components/TurfEdit.vue';
-import TurfSuggestions from '@/components/TurfSuggestions.vue';
+import TurfSuggestions from '@/components/_TurfSuggestions.vue';
 
 const mapStore = useMapStore()
 const turfStore = useTurfStore()

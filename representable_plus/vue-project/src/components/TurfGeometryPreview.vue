@@ -16,7 +16,7 @@ const draw = () => {
   if (!svgEl.value || !props.geometry) return;
 
   const width = svgEl.value.clientWidth || 200;
-  const height = 100;
+  const height = 80;
 
   const svg = d3.select(svgEl.value);
   svg.selectAll('*').remove();

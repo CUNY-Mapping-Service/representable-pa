@@ -37,7 +37,7 @@ export interface TractSuggestion {
   id: number
 }
 
-const getBaseRoute = () => {
+export const getBaseRoute = () => {
   return window.location.pathname === '/' ? 'http://127.0.0.1:8000/partners/test/turf/api' : './api'
 }
 

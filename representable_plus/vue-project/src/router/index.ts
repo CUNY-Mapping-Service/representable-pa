@@ -4,8 +4,8 @@ import Test from '@/views/Test.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
-  { path: '/', component: Overview },
-  { path: '/landing', component: Landing },
+  { path: '/', component: Landing },
+  { path: '/old', component: Overview },
   { path: '/test', component: Test },
 ]
 
