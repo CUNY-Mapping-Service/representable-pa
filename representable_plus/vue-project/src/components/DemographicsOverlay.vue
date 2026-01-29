@@ -36,9 +36,9 @@ const formatNumber = (raw: unknown) => {
     const num = Number(raw);
     if (Number.isNaN(num)) return String(raw);
 
-    // if the value is between 0 and 1, assumes percentages by default
-    if (num > 0 && num < 1) {
-        return `${d3.format('0,.2f')(num * 100)}%`;
+    // if the value contains a decimal, assumes percentages by default
+    if (String(num).includes('.')) {
+        return `${d3.format('0,.2f')(num)}%`;
     }
 
     return d3.format('0,.2f')(num);
