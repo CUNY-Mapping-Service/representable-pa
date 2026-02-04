@@ -158,7 +158,7 @@ onMounted(() => {
 <template>
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-3xl font-bold">{{ selectedTurf.name }}</h1>
-        <button type="button" class="btn btn-ghost" @click="emit('back')">
+        <button type="button" class="btn" @click="emit('back')">
             Back
         </button>
     </div>
@@ -228,7 +228,8 @@ onMounted(() => {
 
         <div v-else class="suggestions-scroll-wrapper">
             <div class="suggestions-scroll">
-                <div v-for="suggestion in suggestions" :key="suggestion.id" class="suggestion-card card border-1 border-solid border-neutral-100"
+                <div v-for="suggestion in suggestions" :key="suggestion.id"
+                    class="suggestion-card card border-1 border-solid border-neutral-100"
                     :class="[previewedSuggestionId === suggestion.id ? 'preview' : '']"
                     @click="previewSuggestion(suggestion)"
                     @mouseenter="loadSuggestionData(suggestion.id, suggestion.tracts)">

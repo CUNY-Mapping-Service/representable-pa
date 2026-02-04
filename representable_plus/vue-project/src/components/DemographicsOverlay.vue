@@ -168,62 +168,62 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="h-full overflow-y-auto p-3 bg-base-100 rounded-md">
-        <h2 class="text-2xl font-bold mb-6">Demographics Comparison</h2>
+    <div class="h-full p-3">
+        <h2 class="text-xl font-bold mb-4">Demographics</h2>
 
         <div v-if="loadingDemographics" class="text-center py-8">
-            <span class="loading loading-spinner loading-lg"></span>
-            <p class="mt-4">Loading demographic data...</p>
+            <span class="loading loading-spinner loading-md"></span>
+            <p class="mt-2 text-sm">Loading...</p>
         </div>
 
-        <div v-else-if="demographicsError" class="alert alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+        <div v-else-if="demographicsError" class="alert alert-error alert-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>{{ demographicsError }}</span>
+            <span class="text-xs">{{ demographicsError }}</span>
         </div>
 
-        <div v-else-if="demographics?.aggregated" class="space-y-8">
+        <div v-else-if="demographics?.aggregated" class="space-y-6">
             <div v-for="category in getCategories" :key="category">
-                <h6 class="text-lg font-semibold mb-3">
+                <h6 class="text-base font-semibold mb-2">
                     {{ category }}
                 </h6>
 
                 <div class="overflow-x-auto">
-                    <table class="table table-zebra w-full">
+                    <table class="table table-zebra table-xs w-full">
                         <thead>
                             <tr>
-                                <th>Metric</th>
-                                <th class="text-center">
-                                    {{ isUsingSelectedTractsAsBase ? 'Selected Tracts' : 'Current Turf' }}
+                                <th class="text-xs">Metric</th>
+                                <th class="text-center text-xs">
+                                    {{ isUsingSelectedTractsAsBase ? 'Selected' : 'Turf' }}
                                 </th>
-                                <th v-if="!isUsingSelectedTractsAsBase" class="text-center">
-                                    Selected Tracts
+                                <th v-if="!isUsingSelectedTractsAsBase" class="text-center text-xs">
+                                    Selected
                                 </th>
-                                <th v-if="!isUsingSelectedTractsAsBase" class="text-center">
-                                    Difference
+                                <th v-if="!isUsingSelectedTractsAsBase" class="text-center text-xs">
+                                    Diff
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
-                                <td class="font-medium">
+                                <td class="font-medium text-xs">
                                     {{ metric.name }}
                                 </td>
 
                                 <!-- Base value (turf or selectedTracts fallback) -->
-                                <td class="text-center font-mono">
+                                <td class="text-center font-mono text-xs">
                                     {{ formatNumber(demographics.aggregated[metric.id]) }}
                                 </td>
 
                                 <!-- Comparison only shown when a real turf exists -->
-                                <td v-if="!isUsingSelectedTractsAsBase" class="text-center font-mono">
+                                <td v-if="!isUsingSelectedTractsAsBase" class="text-center font-mono text-xs">
                                     {{ formatNumber(selectedTractsDemographics?.aggregated?.[metric.id]) }}
                                 </td>
                                 <td v-if="!isUsingSelectedTractsAsBase" class="text-center">
-                                    <span class="badge" :class="getDifferenceClass(getDifference(metric.id))">
+                                    <span class="badge badge-xs" :class="getDifferenceClass(getDifference(metric.id))">
                                         {{ formatDifference(getDifference(metric.id)) }}
                                     </span>
                                 </td>
@@ -234,19 +234,19 @@ onMounted(() => {
             </div>
         </div>
 
-        <div v-else class="alert">
+        <div v-else class="alert alert-sm">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                class="stroke-info shrink-0 w-6 h-6">
+                class="stroke-info shrink-0 w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span>No demographic data available.</span>
+            <span class="text-xs">No data available.</span>
         </div>
     </div>
 </template>
 
 <style scoped>
 .table {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
 }
 </style>

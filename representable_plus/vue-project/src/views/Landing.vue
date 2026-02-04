@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import InteractiveMap from '@/components/InteractiveMap.vue';
 import TurfGeometryPreview from '@/components/TurfGeometryPreview.vue';
-import DemographicsOverlay from '@/components/DemographicsOverlay.vue';
 import TurfSuggestions from '@/components/TurfSuggestions.vue';
 import { turfApi, type Turf } from '@/services/api';
 import { useDefaultStore } from '@/stores/default';
 import { getTurfColor, getTurfOutlineColor } from '@/utils/colors';
 import { storeToRefs } from 'pinia';
 import { computed, nextTick, onMounted, ref } from 'vue';
-import EditTurfOverlay from '@/components/EditTurfOverlay.vue';
 import InteractiveMapChoroplethForSuggestion from '@/components/InteractiveMapChoroplethForSuggestion.vue';
 
 const defaultStore = useDefaultStore()
@@ -21,8 +19,6 @@ export interface TurfWithColors extends Turf {
 
 const turfs = ref<TurfWithColors[]>([])
 const selectedTurf = ref<TurfWithColors | null>(null)
-const editOverlayCollapsed = ref(false)
-const demographicsOverlayCollapsed = ref(false)
 
 const searchQuery = ref('')
 
@@ -86,12 +82,12 @@ const viewSuggestions = function (turf: TurfWithColors) {
     defaultStore.setMode('suggestion')
 }
 
-const handleEditClose = () => {
+const handleMapClose = () => {
     selectedTurf.value = null
     defaultStore.setMode('view')
 }
 
-const handleEditSave = async () => {
+const handleMapSave = async () => {
     // Reload turfs after save
     await loadTurfs()
 }
@@ -107,14 +103,15 @@ const handleSuggestionsBack = () => {
         <div class="map-container" :class="[modeMapSize]">
             <InteractiveMapChoroplethForSuggestion :turfs="turfs as TurfWithColors[]"
                 :selectedTurf="selectedTurf as TurfWithColors" v-if="mode === 'suggestion'" />
-            <InteractiveMap :turfs="turfs as TurfWithColors[]" :selectedTurf="selectedTurf as TurfWithColors" v-else />
+            <InteractiveMap :turfs="turfs as TurfWithColors[]" :selectedTurf="selectedTurf as TurfWithColors"
+                @close="handleMapClose" @save="handleMapSave" v-else />
         </div>
         <div class="overlay">
             <div class="flex gap-2" v-show="!!selectedTurf && mode === 'view'">
                 <button class="btn btn-sm" type="button" @click="selectedTurf = null">
                     Clear selected turf
                 </button>
-                <button class="btn btn-sm btn-info" type="button" @click="selectedTurf = null">
+                <button class="btn btn-sm btn-info" type="button" @click="editTurf(selectedTurf as TurfWithColors)">
                     Edit
                 </button>
             </div>
@@ -130,17 +127,21 @@ const handleSuggestionsBack = () => {
             </h3>
 
             <div>
-                <div class="card bg-base-100 shadow-md mb-5 cursor-pointer hover:bg-gray-100 transition-colors"
-                    @click="toggleNewTurf()">
-                    <div class="card-body text-center pt-2 pb-3">
-                        <p class="text-4xl font-bold">+</p>
-                        <p class="text-sm italic">Draw a new turf</p>
+                <div class="masonry my-4">
+                    <div class="masonry-item">
+                        <div class="card bg-base-100  shadow-md mb-5 cursor-pointer hover:bg-gray-100 transition-colors"
+                            @click="toggleNewTurf()">
+                            <div class="card-body text-center pt-2 pb-3">
+                                <p class="text-4xl font-bold">+</p>
+                                <p class="text-sm italic">Draw a new turf</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="mb-5">
                     <div class="form-control">
-                        <input class="input input-bordered w-full" type="text"
+                        <input class="input input-bordered w-4/6" type="text"
                             placeholder="Search turfs by name or description..." v-model="searchQuery">
                     </div>
 
@@ -213,40 +214,8 @@ const handleSuggestionsBack = () => {
 
         <div v-else-if="mode === 'edit'" class="overlay">
             <button class="btn shadow-md back-button" type="button" aria-label="Back to view mode"
-                @click="handleEditClose()">
-                ◅
-            </button>
-
-            <div class="demographics-overlay" :class="{ 'collapsed': demographicsOverlayCollapsed }">
-                <DemographicsOverlay v-if="!demographicsOverlayCollapsed"
-                    :selectedTurf="selectedTurf as TurfWithColors" />
-            </div>
-
-            <button class="collapse-tab collapse-tab-left" type="button"
-                @click="demographicsOverlayCollapsed = !demographicsOverlayCollapsed"
-                :title="demographicsOverlayCollapsed ? 'Expand Demographics' : 'Collapse Demographics'">
-                <svg v-if="demographicsOverlayCollapsed" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M6 3l5 5-5 5z" fill="currentColor" />
-                </svg>
-                <svg v-else width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M10 3L5 8l5 5z" fill="currentColor" />
-                </svg>
-            </button>
-
-            <div class="edit-overlay" :class="{ 'collapsed': editOverlayCollapsed }">
-                <EditTurfOverlay v-if="!editOverlayCollapsed" :selectedTurf="selectedTurf as TurfWithColors"
-                    @close="handleEditClose" @save="handleEditSave" />
-            </div>
-
-            <button class="collapse-tab collapse-tab-right" type="button"
-                @click="editOverlayCollapsed = !editOverlayCollapsed"
-                :title="editOverlayCollapsed ? 'Expand Editor' : 'Collapse Editor'">
-                <svg v-if="editOverlayCollapsed" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M10 3L5 8l5 5z" fill="currentColor" />
-                </svg>
-                <svg v-else width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M6 3l5 5-5 5z" fill="currentColor" />
-                </svg>
+                @click="handleMapClose()">
+                Back
             </button>
         </div>
 
@@ -290,82 +259,8 @@ main {
     pointer-events: none;
 }
 
-.back-button,
-.edit-overlay,
-.demographics-overlay,
-.collapse-tab {
+.back-button {
     pointer-events: auto;
-}
-
-.demographics-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 1rem;
-    z-index: 2;
-    border-radius: 5px;
-    margin: 5px;
-    max-width: min(45vw, 55rem);
-    height: 50vh;
-    overflow-y: auto;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.demographics-overlay.collapsed {
-    transform: translateX(calc(-100% - 0.5rem));
-    opacity: 0;
-    pointer-events: none;
-}
-
-.edit-overlay {
-    position: absolute;
-    bottom: 0;
-    right: 1rem;
-    z-index: 2;
-    padding: .5rem;
-    border-radius: 7px;
-    width: 55vw;
-    overflow-y: auto;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.edit-overlay.collapsed {
-    transform: translateX(calc(100% + 0.5rem));
-    opacity: 0;
-    pointer-events: none;
-}
-
-.collapse-tab {
-    position: absolute;
-    top: calc(50% - 1.5rem);
-    width: 1.75rem;
-    height: 3rem;
-    background-color: #f5f5f5;
-    border: 1px solid #dbdbdb;
-    border-radius: 0.5rem;
-    box-shadow: 1px 1px 5px #dbdbdb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 3;
-    color: #363636;
-    padding: 0;
-}
-
-.collapse-tab:hover {
-    background-color: #e8e8e8;
-}
-
-.collapse-tab-left {
-    left: calc(1rem + 0.25rem);
-}
-
-.collapse-tab-right {
-    right: calc(1rem + 0.25rem);
-}
-
-.collapse-tab svg {
-    display: block;
 }
 
 .back-button {
