@@ -38,6 +38,8 @@ onMounted(() => {
         attributionControl: false
     });
 
+    mapInstance.addControl(new NavigationControl(), 'top-left');
+
     mapInstance.on('load', () => {
         isMapReady.value = true;
         defaultStore.setMap(mapInstance);
@@ -327,50 +329,42 @@ function updateHoverPreview(tractIds: string[]) {
 </script>
 
 <template>
-    <div id="map" class="map">
+    <div id="map" class="map w-full h-full">
         <!-- Edit mode controls -->
-        <div v-if="mode === 'edit'" class="edit-controls box px-2 py-3">
-            <div v-if="selectedTurf" class="notification is-info is-light py-2 px-3 mb-3">
-                <p class="is-size-7"><strong>Editing:</strong> {{ selectedTurf.name }}</p>
+        <div v-if="mode === 'edit'"
+            class="edit-controls absolute top-2.5 right-2.5 z-10 bg-base-100 rounded-lg shadow-lg px-3 py-4">
+            <div v-if="selectedTurf" class="alert alert-info py-2 px-3 mb-3">
+                <p class="text-sm"><strong>Editing:</strong> {{ selectedTurf.name }}</p>
             </div>
 
-            <div class="field">
-                <div class="control">
-                    <div class="buttons has-addons">
-                        <button class="button px-3 py-1" :class="{ 'is-info is-selected': editMode === 'draw' }"
-                            @click="editMode = 'draw'">
-                            <span class="icon">
-                                ✏️
-                            </span>
-                            <span>Draw</span>
-                        </button>
-                        <button class="button px-3 py-1" :class="{ 'is-danger is-selected': editMode === 'erase' }"
-                            @click="editMode = 'erase'">
-                            <span class="icon">
-                                🧽
-                            </span>
-                            <span>Erase</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label mb-0">Selection Size: {{ selectionRadius }}</label>
-                <div class="control">
-                    <input id="selection-radius" type="range" v-model.number="selectionRadius" min="1" max="10" step="1"
-                        class="slider is-fullwidth is-info" />
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <button @click="undo" :disabled="selectionHistory.length === 0"
-                        class="button is-info is-fullwidth py-1">
-                        <span class="icon">↩️</span>
-                        <span>Undo ({{ selectionHistory.length }})</span>
+            <div class="form-control mb-3">
+                <div class="btn-group w-full">
+                    <button class="btn btn-sm flex-1" :class="editMode === 'draw' ? 'btn-info' : 'btn-ghost'"
+                        @click="editMode = 'draw'">
+                        <span class="mr-1">✏️</span>
+                        <span>Draw</span>
+                    </button>
+                    <button class="btn btn-sm flex-1" :class="editMode === 'erase' ? 'btn-error' : 'btn-ghost'"
+                        @click="editMode = 'erase'">
+                        <span class="mr-1">🧽</span>
+                        <span>Erase</span>
                     </button>
                 </div>
+            </div>
+
+            <div class="form-control mb-3">
+                <label class="label py-0 mb-1">
+                    <span class="label-text">Selection Size: {{ selectionRadius }}</span>
+                </label>
+                <input id="selection-radius" type="range" v-model.number="selectionRadius" min="1" max="10" step="1"
+                    class="range range-info range-sm" />
+            </div>
+
+            <div class="form-control">
+                <button @click="undo" :disabled="selectionHistory.length === 0" class="btn btn-info btn-sm w-full">
+                    <span class="mr-1">↩️</span>
+                    <span>Undo ({{ selectionHistory.length }})</span>
+                </button>
             </div>
         </div>
     </div>
@@ -380,25 +374,5 @@ function updateHoverPreview(tractIds: string[]) {
 #map {
     width: 100%;
     height: 100%;
-}
-
-.edit-controls {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-}
-
-.slider {
-    appearance: none;
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: #dbdbdb;
-    outline: none;
-}
-
-.buttons.has-addons .button.is-selected {
-    z-index: 2;
 }
 </style>

@@ -110,11 +110,11 @@ const handleSuggestionsBack = () => {
             <InteractiveMap :turfs="turfs as TurfWithColors[]" :selectedTurf="selectedTurf as TurfWithColors" v-else />
         </div>
         <div class="overlay">
-            <div class="buttons" v-show="!!selectedTurf && mode === 'view'">
-                <button class="button is-small" type="button" @click="selectedTurf = null">
+            <div class="flex gap-2" v-show="!!selectedTurf && mode === 'view'">
+                <button class="btn btn-sm" type="button" @click="selectedTurf = null">
                     Clear selected turf
                 </button>
-                <button class="button is-small is-info" type="button" @click="selectedTurf = null">
+                <button class="btn btn-sm btn-info" type="button" @click="selectedTurf = null">
                     Edit
                 </button>
             </div>
@@ -122,64 +122,65 @@ const handleSuggestionsBack = () => {
         </div>
 
         <div v-if="mode === 'view'" class="info-container">
-            <h2 class="title is-3 has-text-grey-dark m-0">Turf Data Manager</h2>
-            <h3>
+            <h2 class="text-3xl font-bold m-0">Turf Data Manager</h2>
+            <h3 class="text-base font-normal mt-2 mb-4">
                 Drawing a turf allows you to track and organize information for census outreach!
                 Start by creating a new turf or selecting an existing one below. You may also view
                 key demographics of the area.
             </h3>
 
             <div>
-                <div class="card mb-5 is-clickable" @click="toggleNewTurf()">
-                    <div class="card-content has-text-centered pt-2 pb-3">
-                        <p class="title">+</p>
-                        <p class="subtitle is-size-6 is-italic">Draw a new turf</p>
+                <div class="card bg-base-100 shadow-md mb-5 cursor-pointer hover:bg-gray-100 transition-colors"
+                    @click="toggleNewTurf()">
+                    <div class="card-body text-center pt-2 pb-3">
+                        <p class="text-4xl font-bold">+</p>
+                        <p class="text-sm italic">Draw a new turf</p>
                     </div>
                 </div>
 
-                <div class="field mb-5">
-                    <div class="control">
-                        <input class="input" type="text" placeholder="Search turfs by name or description..."
-                            v-model="searchQuery">
+                <div class="mb-5">
+                    <div class="form-control">
+                        <input class="input input-bordered w-full" type="text"
+                            placeholder="Search turfs by name or description..." v-model="searchQuery">
                     </div>
 
                     <div class="mt-3">
-                        <button class="button is-small" type="button" @click="selectedTurf = null"
-                            v-show="!!selectedTurf">
+                        <button class="btn btn-sm" type="button" @click="selectedTurf = null" v-show="!!selectedTurf">
                             Clear selected turf
                         </button>
                     </div>
                     <div class="masonry mt-4">
                         <div v-for="turf in filteredTurfs" :key="turf.id" class="masonry-item">
-                            <div class="card" @click="selectedTurf = turf" style="cursor: pointer;">
-                                <div class="card-content">
-                                    <div class="media">
-                                        <div class="media-content">
-                                            <p class="title is-5">
+                            <div class="card bg-base-100 shadow-md hover:bg-gray-100 transition-colors cursor-pointer"
+                                @click="selectedTurf = turf">
+                                <div class="card-body p-4">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex-1">
+                                            <h3 class="card-title text-lg">
                                                 {{ turf.name || 'Untitled Turf' }}
-                                            </p>
-                                            <p class="subtitle is-7">
+                                            </h3>
+                                            <p class="text-xs">
                                                 ID: {{ turf.id }}, # Tracts:
                                                 <strong>{{ turf.tracts.length }}</strong>
                                             </p>
                                         </div>
-                                        <div class="media-right">
-                                            <button class="button is-small is-info" title="Edit turf"
+                                        <div>
+                                            <button class="btn btn-sm btn-info" title="Edit turf"
                                                 @click.stop="editTurf(turf as TurfWithColors)">
                                                 Edit
                                             </button>
                                         </div>
                                     </div>
 
-                                    <div class="content">
-                                        <p>
+                                    <div>
+                                        <p class="text-sm mb-3">
                                             {{ turf.details || 'No details provided.' }}
                                         </p>
 
-                                        <p class="is-size-7 m-0">
+                                        <p class="text-xs m-0">
                                             Population : <strong></strong>
                                         </p>
-                                        <p class="is-size-7 m-0">
+                                        <p class="text-xs m-0">
                                             Households : <strong></strong>
                                         </p>
 
@@ -189,7 +190,7 @@ const handleSuggestionsBack = () => {
                                         </div>
 
                                         <div class="mt-3">
-                                            <button class="button is-small is-info is-fullwidth"
+                                            <button class="btn btn-sm btn-info w-full"
                                                 @click.stop="viewSuggestions(turf as TurfWithColors)">
                                                 View Details
                                             </button>
@@ -199,7 +200,7 @@ const handleSuggestionsBack = () => {
                             </div>
                         </div>
 
-                        <div v-if="filteredTurfs.length === 0" class="masonry-item has-text-centered has-text-grey">
+                        <div v-if="filteredTurfs.length === 0" class="masonry-item text-center text-gray-500">
                             No turfs match your search.
                         </div>
                     </div>
@@ -211,9 +212,9 @@ const handleSuggestionsBack = () => {
         </div>
 
         <div v-else-if="mode === 'edit'" class="overlay">
-            <button class="button is-light back-button" type="button" aria-label="Back to view mode"
+            <button class="btn shadow-md back-button" type="button" aria-label="Back to view mode"
                 @click="handleEditClose()">
-                🢨
+                ◅
             </button>
 
             <div class="demographics-overlay" :class="{ 'collapsed': demographicsOverlayCollapsed }">
@@ -283,10 +284,6 @@ main {
     flex: 1 1 auto;
 }
 
-.info-container .card:hover {
-    background-color: rgb(233, 233, 233);
-}
-
 .overlay {
     position: absolute;
     inset: 0;
@@ -305,11 +302,8 @@ main {
     bottom: 0;
     left: 1rem;
     z-index: 2;
-    background-color: #fff;
-    padding: .5rem;
     border-radius: 5px;
     margin: 5px;
-    box-shadow: 2px 2px 8px #a9a9a9;
     max-width: min(45vw, 55rem);
     height: 50vh;
     overflow-y: auto;
@@ -327,13 +321,9 @@ main {
     bottom: 0;
     right: 1rem;
     z-index: 2;
-    background-color: #fff;
     padding: .5rem;
-    border-radius: 5px;
-    margin: 5px;
-    box-shadow: 2px 2px 8px #a9a9a9;
+    border-radius: 7px;
     width: 55vw;
-    height: 50vh;
     overflow-y: auto;
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
@@ -352,7 +342,7 @@ main {
     background-color: #f5f5f5;
     border: 1px solid #dbdbdb;
     border-radius: 0.5rem;
-    box-shadow: 2px 2px 8px #a9a9a9;
+    box-shadow: 1px 1px 5px #dbdbdb;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -380,25 +370,10 @@ main {
 
 .back-button {
     position: absolute;
-    top: 0.6rem;
-    left: 0.6rem;
+    top: 0.5rem;
+    left: 2.8rem;
     z-index: 3;
     border-radius: 6px;
-    box-shadow: 2px 2px 8px #a9a9a9;
-}
-
-.buttons {
-    pointer-events: none;
-    display: flex;
-    position: absolute;
-    top: 0.6rem;
-    left: 0.6rem;
-    z-index: 3;
-}
-
-.buttons button {
-    pointer-events: all;
-    box-shadow: 2px 2px 8px #a9a9a9;
 }
 
 .masonry {
@@ -411,8 +386,7 @@ main {
     margin-bottom: 1rem;
 }
 
-/* Match Bulma-ish breakpoints */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
     .masonry {
         column-count: 2;
     }

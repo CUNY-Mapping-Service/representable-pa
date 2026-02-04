@@ -31,7 +31,7 @@ const formatNumber = (raw: unknown) => {
         return `${d3.format('0,.2f')(num)}%`;
     }
 
-    return d3.format('0,.2f')(num);
+    return d3.format('0,')(num);
 };
 
 const defaultStore = useDefaultStore();
@@ -68,14 +68,14 @@ const getDifference = (metricId: string, suggestionDemo: DemographicsResponse | 
     }
 };
 
-const getDifferenceClass = (diff: number | null) => {
-    if (diff === null) return 'is-light';
-    if (diff === 0) return 'is-light';
-    return diff > 0 ? 'is-success' : 'is-danger';
+const getDifferenceBadgeClass = (diff: number | null) => {
+    if (diff === null) return 'badge-ghost';
+    if (diff === 0) return 'badge-ghost';
+    return diff > 0 ? 'badge-success' : 'badge-error';
 };
 
 const formatDifference = (diff: number | null) => {
-    const format = d3.format('0,.2f');
+    const format = d3.format('0,');
     if (diff === null) return 'N/A';
     if (diff === 0) return '0';
     return diff > 0 ? `+${format(diff)}` : `${format(diff)}`;
@@ -156,37 +156,30 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="level mb-4">
-        <div class="level-left">
-            <div class="level-item">
-                <h1 class="title is-2">{{ selectedTurf.name }}</h1>
-            </div>
-        </div>
-        <div class="level-right">
-            <div class="level-item">
-                <button type="button" class="button is-light" @click="emit('back')">
-                    Back
-                </button>
-            </div>
-        </div>
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-3xl font-bold">{{ selectedTurf.name }}</h1>
+        <button type="button" class="btn btn-ghost" @click="emit('back')">
+            Back
+        </button>
     </div>
 
     <div class="container mb-5" v-if="demographics">
         <div class="current-demographics-grid">
             <div v-for="category in getCategories" :key="category" class="current-demographics-card">
-                <h6 class="subtitle is-6 mb-2">{{ category }}</h6>
-                <table class="table is-narrow is-fullwidth current-demographics-table">
+                <h6 class="text-sm font-semibold mb-2">{{ category }}</h6>
+                <table class="table table-xs w-full current-demographics-table">
                     <thead>
                         <tr>
                             <th class="metric-col">Metric</th>
-                            <th class="value-col has-text-centered">Current</th>
+                            <th class="value-col text-center">Current</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id"
-                            :class="{ 'hover-row': true, 'clicked-row': choroplethMetric === metric.id}" @click="defaultStore.setChoroplethMetric(metric.id)">
+                            :class="{ 'hover-row': true, 'clicked-row': choroplethMetric === metric.id }"
+                            @click="defaultStore.setChoroplethMetric(metric.id)">
                             <td class="metric-name metric-col">{{ metric.name }}</td>
-                            <td class="metric-value value-col has-text-centered">
+                            <td class="metric-value value-col text-center">
                                 {{ formatNumber(demographics?.aggregated?.[metric.id]) }}
                             </td>
                         </tr>
@@ -197,123 +190,120 @@ onMounted(() => {
     </div>
 
     <div class="container">
-        <h2 class="title is-4">Resources and Assets</h2>
+        <h2 class="text-xl font-bold">Resources and Assets</h2>
         <p>
             Allow orgs to track their existing resources on the map, they can import a spreadsheet or
             from the resources below
         </p>
         <p>
-            <a href="https://data.pa.gov/" target="_blank" rel="noopener noreferrer">data.pa</a>
+            <a href="https://data.pa.gov/" target="_blank" rel="noopener noreferrer"
+                class="link link-primary">data.pa</a>
         </p>
         <p>
-            <a href="https://assets.wprdc.org/" target="_blank" rel="noopener noreferrer">
+            <a href="https://assets.wprdc.org/" target="_blank" rel="noopener noreferrer" class="link link-primary">
                 https://assets.wprdc.org/
             </a>
         </p>
     </div>
 
     <div class="container">
-        <h2 class="title is-4">Events</h2>
+        <h2 class="text-xl font-bold">Events</h2>
         <p>Track previous events and drives</p>
     </div>
 
     <div class="container suggestions-container">
-        <h2 class="title is-4">Additional Tract Suggestions</h2>
+        <h2 class="text-xl font-bold">Additional Tract Suggestions</h2>
 
-        <div v-if="suggestionsLoading" class="notification is-info is-light">
-            <p>Loading suggestions…</p>
+        <div v-if="suggestionsLoading" class="alert alert-info">
+            <span>Loading suggestions…</span>
         </div>
 
-        <div v-else-if="suggestionsError" class="notification is-danger is-light">
-            <p>{{ suggestionsError }}</p>
+        <div v-else-if="suggestionsError" class="alert alert-error">
+            <span>{{ suggestionsError }}</span>
         </div>
 
-        <div v-else-if="!suggestions || suggestions.length === 0" class="notification is-info is-light">
-            <p>No suggestions available for this turf.</p>
+        <div v-else-if="!suggestions || suggestions.length === 0" class="alert alert-info">
+            <span>No suggestions available for this turf.</span>
         </div>
 
         <div v-else class="suggestions-scroll-wrapper">
             <div class="suggestions-scroll">
-                <div v-for="suggestion in suggestions" :key="suggestion.id" class="suggestion-card card"
+                <div v-for="suggestion in suggestions" :key="suggestion.id" class="suggestion-card card border-1 border-solid border-neutral-100"
                     :class="[previewedSuggestionId === suggestion.id ? 'preview' : '']"
                     @click="previewSuggestion(suggestion)"
                     @mouseenter="loadSuggestionData(suggestion.id, suggestion.tracts)">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                            <span class="tag is-info mr-2">{{ suggestion.type }}</span>
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="badge badge-info mr-2">{{ suggestion.type }}</span>
                             {{ suggestion.tracts.length }} tract(s)
-                        </p>
-                    </header>
-
-                    <div class="card-content">
-                        <div class="content">
-                            <p class="mb-3">{{ suggestion.description }}</p>
-
-                            <div v-if="loadingStates[suggestion.id]" class="has-text-centered py-4">
-                                <span class="is-size-7">Loading demographics...</span>
-                            </div>
-
-                            <div v-else-if="suggestionDemographics[suggestion.id]">
-                                <div v-for="category in getCategories" :key="category" class="mb-3">
-                                    <h6 class="subtitle is-6 mb-2">{{ category }}</h6>
-                                    <table class="table is-narrow is-fullwidth comparison-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Metric</th>
-                                                <th class="has-text-centered">Current</th>
-                                                <th class="has-text-centered">With Change</th>
-                                                <th class="has-text-centered">Diff</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
-                                                <td class="metric-name">{{ metric.name }}</td>
-                                                <td class="metric-value has-text-centered">
-                                                    {{ formatNumber(demographics?.aggregated?.[metric.id]) }}
-                                                </td>
-                                                <td class="metric-value has-text-centered">
-                                                    {{
-                                                        formatNumber(
-                                                            suggestionDemographics[suggestion.id]?.aggregated?.[metric.id],
-                                                        )
-                                                    }}
-                                                </td>
-                                                <td class="has-text-centered">
-                                                    <span class="tag is-small" :class="getDifferenceClass(
-                                                        getDifference(
-                                                            metric.id,
-                                                            suggestionDemographics[suggestion.id],
-                                                        ),
-                                                    )">
-                                                        {{
-                                                            formatDifference(
-                                                                getDifference(
-                                                                    metric.id,
-                                                                    suggestionDemographics[suggestion.id],
-                                                                ),
-                                                            )
-                                                        }}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                            <div v-else class="has-text-centered py-4 has-text-grey-light">
-                                <span class="is-size-7">Hover to load demographics</span>
-                            </div>
                         </div>
                     </div>
 
-                    <footer class="card-footer">
-                        <a class="card-footer-item" @click.stop="applySuggestion(suggestion.tracts)">
-                            <span class="icon-text">
-                                <span>Apply Suggestion</span>
-                            </span>
-                        </a>
-                    </footer>
+                    <div class="card-body">
+                        <p class="mb-3">{{ suggestion.description }}</p>
+
+                        <div v-if="loadingStates[suggestion.id]" class="text-center py-4">
+                            <span class="text-xs">Loading demographics...</span>
+                        </div>
+
+                        <div v-else-if="suggestionDemographics[suggestion.id]">
+                            <div v-for="category in getCategories" :key="category" class="mb-3">
+                                <h6 class="text-sm font-semibold mb-2">{{ category }}</h6>
+                                <table class="table table-xs w-full comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th class="text-center">Current</th>
+                                            <th class="text-center">With Change</th>
+                                            <th class="text-center">Diff</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
+                                            <td class="metric-name">{{ metric.name }}</td>
+                                            <td class="metric-value text-center">
+                                                {{ formatNumber(demographics?.aggregated?.[metric.id]) }}
+                                            </td>
+                                            <td class="metric-value text-center">
+                                                {{
+                                                    formatNumber(
+                                                        suggestionDemographics[suggestion.id]?.aggregated?.[metric.id],
+                                                    )
+                                                }}
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-sm" :class="getDifferenceBadgeClass(
+                                                    getDifference(
+                                                        metric.id,
+                                                        suggestionDemographics[suggestion.id],
+                                                    ),
+                                                )">
+                                                    {{
+                                                        formatDifference(
+                                                            getDifference(
+                                                                metric.id,
+                                                                suggestionDemographics[suggestion.id],
+                                                            ),
+                                                        )
+                                                    }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div v-else class="text-center py-4 opacity-50">
+                            <span class="text-xs">Hover or click to load demographics</span>
+                        </div>
+                    </div>
+
+                    <div class="card-actions">
+                        <button class="btn btn-ghost btn-sm w-full" @click.stop="applySuggestion(suggestion.tracts)">
+                            Apply Suggestion
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -324,7 +314,7 @@ onMounted(() => {
 .container {
     padding-bottom: 0.8rem;
     margin-bottom: 1rem;
-    border-bottom: solid 1px #e4e4e4;
+    border-bottom: solid 1px hsl(var(--bc) / 0.2);
 }
 
 .suggestions-container {
@@ -349,19 +339,46 @@ onMounted(() => {
     max-width: 400px;
     flex-shrink: 0;
     scroll-snap-align: start;
+    background-color: hsl(var(--b1));
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .suggestion-card.preview {
-    background-color: rgba(214, 214, 214, 0.5);
+    background-color: hsl(var(--b2));
 }
 
 .suggestion-card:hover {
-    background-color: rgba(214, 214, 214, 0.4);
+    background-color: hsl(var(--b2));
     cursor: pointer;
+}
+
+.card-header {
+    padding: 1rem;
+    border: 1px solid hsl(var(--bc) / 0.1);
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.card-body {
+    padding: 1rem;
+    flex: 1;
+}
+
+.card-actions {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid hsl(var(--bc) / 0.1);
 }
 
 .comparison-table {
     font-size: 0.75rem;
+    background-color: transparent;
 }
 
 .comparison-table .metric-name {
@@ -375,7 +392,7 @@ onMounted(() => {
 }
 
 .comparison-table thead th {
-    background-color: #f5f5f5;
+    background-color: hsl(var(--b2));
     font-weight: 600;
     font-size: 0.7rem;
     padding: 0.5rem;
@@ -384,15 +401,6 @@ onMounted(() => {
 .comparison-table td {
     padding: 0.5rem;
 }
-
-.card-footer-item {
-    cursor: pointer;
-}
-
-.card-footer-item:hover {
-    background-color: #f5f5f5;
-}
-
 
 .current-demographics-grid {
     display: grid;
@@ -420,20 +428,22 @@ onMounted(() => {
 
 .current-demographics-card {
     padding: 0.5rem 0.75rem;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    background-color: #fafafa;
+    border: 1px solid hsl(var(--bc) / 0.2);
+    border-radius: 0.25rem;
+    background-color: hsl(var(--b2));
 }
 
 .current-demographics-table {
     table-layout: fixed;
     font-size: 0.7rem;
     margin-bottom: 0;
+    background-color: transparent;
 }
 
 .current-demographics-table thead th {
     padding: 0.25rem 0.4rem;
     font-size: 0.65rem;
+    background-color: hsl(var(--b3));
 }
 
 .current-demographics-table td {
@@ -459,12 +469,12 @@ onMounted(() => {
     font-family: monospace;
 }
 
-.hover-row:hover{
+.hover-row:hover {
     cursor: pointer;
-    background-color: #dadada;
+    background-color: hsl(var(--b3));
 }
 
-.clicked-row{
-    background-color: #dadada;
+.clicked-row {
+    background-color: hsl(var(--b3));
 }
 </style>

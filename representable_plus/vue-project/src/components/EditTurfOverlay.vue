@@ -141,62 +141,80 @@ async function deleteTurf() {
 </script>
 
 <template>
-    <div class="turf-edit-container">
-        <h2 class="title is-4">{{ selectedTurf ? 'Edit Turf' : 'Create New Turf' }}</h2>
-        <form @submit.prevent="saveTurf">
-            <div class="field">
-                <label class="label" for="turf-name">Name</label>
-                <div class="control">
-                    <input id="turf-name" v-model="turfName" class="input" type="text" placeholder="Enter turf name"
-                        maxlength="100" />
+    <div class="h-full overflow-y-scroll p-3 bg-base-100 rounded-md">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-3xl font-bold">
+                {{ selectedTurf ? 'Edit Turf' : 'Create New Turf' }}
+            </h2>
+            <button type="button" class="btn btn-sm btn-circle btn-ghost" @click="cancelEdit" aria-label="Close">
+                ✕
+            </button>
+        </div>
+
+        <div class="divider mt-0"></div>
+
+        <form @submit.prevent="saveTurf" class="space-y-6">
+            <div class="form-control">
+                <label class="label" for="turf-name">
+                    <span class="label-text font-semibold">Turf Name</span>
+                </label>
+                <input id="turf-name" v-model="turfName" type="text" placeholder="Enter turf name" maxlength="100"
+                    class="input input-bordered w-full focus:input-primary" required />
+            </div>
+
+            <div class="form-control">
+                <label class="label" for="turf-details">
+                    <span class="label-text font-semibold">Description</span>
+                </label>
+                <textarea id="turf-details" v-model="turfDetails" placeholder="Enter turf description" rows="5"
+                    maxlength="500" class="textarea textarea-bordered w-full focus:textarea-primary resize-none"
+                    required></textarea>
+            </div>
+
+            <div class="card bg-base-200 shadow-sm">
+                <div class="card-body p-2">
+                    <div class="flex items-center gap-3">
+                        <div class="badge badge-lg gap-2"
+                            :class="selectedTracts.length > 0 ? 'badge-info' : 'badge-warning'">
+                            {{ selectedTracts.length }} tract{{ selectedTracts.length !== 1 ? 's' : '' }}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm" v-if="selectedTracts.length === 0">
+                                Click on the map to select census tracts
+                            </p>
+                            <p class="text-sm" v-else>
+                                Selected and ready to save
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="field">
-                <label class="label" for="turf-details">Description</label>
-                <div class="control">
-                    <textarea id="turf-details" v-model="turfDetails" class="textarea"
-                        placeholder="Enter turf description" rows="4" maxlength="500"></textarea>
-                </div>
-            </div>
+            <div class="flex flex-wrap gap-3">
+                <button v-if="hasChanges" type="submit" class="btn btn-primary gap-2" :disabled="!isFormValid">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {{ selectedTurf ? 'Update Turf' : 'Save Turf' }}
+                </button>
 
-            <div class="field">
-                <div class="notification"
-                    :class="selectedTracts.length > 0 ? 'is-info is-light' : 'is-warning is-light'">
-                    <p class="is-size-7">
-                        <strong>{{ selectedTracts.length }}</strong> tract(s) selected
-                    </p>
-                    <p class="is-size-7 mt-1" v-if="selectedTracts.length === 0">
-                        Click on the map to select census tracts
-                    </p>
-                </div>
-            </div>
+                <button type="button" class="btn gap-2" @click="cancelEdit">
+                    {{ hasChanges ? 'Cancel' : 'Close' }}
+                </button>
 
-            <div class="field is-grouped">
-                <div class="control" v-if="hasChanges">
-                    <button type="submit" class="button is-primary" :disabled="!isFormValid">
-                        <span>{{ selectedTurf ? 'Update Turf' : 'Save Turf' }}</span>
-                    </button>
-                </div>
-                <div class="control">
-                    <button type="button" class="button is-light" @click="cancelEdit">
-                        {{ hasChanges ? 'Cancel' : 'Close' }}
-                    </button>
-                </div>
-                <div class="control" v-if="selectedTurf">
-                    <button type="button" class="button is-danger" @click="deleteTurf">
-                        Delete Turf
-                    </button>
-                </div>
+                <button v-if="selectedTurf" type="button" class="btn btn-error gap-2 ml-auto" @click="deleteTurf">
+                    Delete Turf
+                </button>
             </div>
         </form>
     </div>
 </template>
 
 <style scoped>
-.turf-edit-container {
-    height: 100%;
-    overflow-y: auto;
-    padding: 1rem;
+.input:focus,
+.textarea:focus {
+    outline: none;
+    border-color: hsl(var(--p));
 }
 </style>

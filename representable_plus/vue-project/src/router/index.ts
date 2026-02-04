@@ -1,11 +1,9 @@
 import Landing from '@/views/Landing.vue'
-import Overview from '@/views/Overview.vue'
 import Test from '@/views/Test.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   { path: '/', component: Landing },
-  { path: '/old', component: Overview },
   { path: '/test', component: Test },
 ]
 

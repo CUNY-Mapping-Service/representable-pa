@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Map as MaplibreMap } from 'maplibre-gl';
+import { Map as MaplibreMap, NavigationControl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { computed, onMounted, ref, toRaw, watch } from 'vue';
 import STYLE from '@/stores/default_style';
@@ -37,6 +37,8 @@ onMounted(() => {
         zoom: mapZoom.value,
         attributionControl: false
     });
+
+    mapInstance.addControl(new NavigationControl(), 'top-left');
 
     mapInstance.on('load', () => {
         isMapReady.value = true;
@@ -265,56 +267,17 @@ function formatNumber(v: number): string {
 </script>
 
 <template>
-    <div class="map-wrapper">
-        <div v-if="showLegend" class="legend">
-            <div v-for="item in legendItems" :key="item.label" class="legend-item">
-                <div class="legend-color" :style="{ backgroundColor: item.color }"></div>
+    <div class="w-full h-full flex flex-col">
+        <div v-if="showLegend" class="flex flex-wrap gap-2 m-1 text-sm">
+            <div v-for="item in legendItems" :key="item.label"
+                class="flex items-center gap-1 bg-base-100 px-1.5 py-0.5 rounded border border-base-300">
+                <div class="w-2.5 h-2.5 rounded border border-base-300" :style="{ backgroundColor: item.color }"></div>
                 <div>{{ item.label }}</div>
             </div>
         </div>
 
-        <div id="map" class="map"></div>
+        <div id="map" class="w-full h-full flex-1"></div>
     </div>
 </template>
 
-<style scoped>
-.map-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-#map {
-    width: 100%;
-    height: 100%;
-    flex: 1 1 auto;
-}
-
-/* Legend styles */
-
-.legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.8rem;
-}
-
-.legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    background: #fff;
-    padding: 2px 6px;
-    border-radius: 3px;
-    border: 1px solid #ddd;
-}
-
-.legend-color {
-    width: 10px;
-    height: 10px;
-    border-radius: 3px;
-    border: 1px solid #ddd;
-}
-</style>
+<style scoped></style>

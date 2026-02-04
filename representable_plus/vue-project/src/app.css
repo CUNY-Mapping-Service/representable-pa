@@ -1,4 +1,9 @@
-@import 'bulma/css/bulma.css';
+@import "tailwindcss";
+@plugin "daisyui";
+
+html {
+  overflow: hidden;
+}
 
 body {
   margin: 0;

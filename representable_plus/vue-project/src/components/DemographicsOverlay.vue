@@ -41,7 +41,7 @@ const formatNumber = (raw: unknown) => {
         return `${d3.format('0,.2f')(num)}%`;
     }
 
-    return d3.format('0,.2f')(num);
+    return d3.format('0,')(num);
 };
 
 /**
@@ -128,12 +128,12 @@ const getDifference = (metricId: string) => {
 };
 
 const getDifferenceClass = (diff: number | null) => {
-    if (diff === null || diff === 0) return 'is-light';
-    return diff > 0 ? 'is-success' : 'is-danger';
+    if (diff === null || diff === 0) return 'badge-ghost';
+    return diff > 0 ? 'badge-success' : 'badge-error';
 };
 
 const formatDifference = (diff: number | null) => {
-    const format = d3.format('0,.2f');
+    const format = d3.format('0,');
     if (diff === null) return 'N/A';
     if (diff === 0) return '0';
     return diff > 0 ? `+${format(diff)}` : `${format(diff)}`;
@@ -168,94 +168,85 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="demographics-container">
-        <h2 class="title is-4">Demographics Comparison</h2>
+    <div class="h-full overflow-y-auto p-3 bg-base-100 rounded-md">
+        <h2 class="text-2xl font-bold mb-6">Demographics Comparison</h2>
 
-        <div v-if="loadingDemographics" class="has-text-centered">
-            <p>Loading demographic data...</p>
+        <div v-if="loadingDemographics" class="text-center py-8">
+            <span class="loading loading-spinner loading-lg"></span>
+            <p class="mt-4">Loading demographic data...</p>
         </div>
 
-        <div v-else-if="demographicsError" class="notification is-danger is-light">
-            {{ demographicsError }}
+        <div v-else-if="demographicsError" class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ demographicsError }}</span>
         </div>
 
-        <div v-else-if="demographics?.aggregated">
-            <div v-for="category in getCategories" :key="category" class="mb-5">
-                <h6 class="subtitle is-6 has-text-weight-semibold">
+        <div v-else-if="demographics?.aggregated" class="space-y-8">
+            <div v-for="category in getCategories" :key="category">
+                <h6 class="text-lg font-semibold mb-3">
                     {{ category }}
                 </h6>
 
-                <table class="table is-fullwidth is-bordered is-striped comparison-table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th class="has-text-centered">
-                                {{ isUsingSelectedTractsAsBase ? 'Selected Tracts' : 'Current Turf' }}
-                            </th>
-                            <th v-if="!isUsingSelectedTractsAsBase" class="has-text-centered">
-                                Selected Tracts
-                            </th>
-                            <th v-if="!isUsingSelectedTractsAsBase" class="has-text-centered">
-                                Difference
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
-                            <td class="metric-name">
-                                {{ metric.name }}
-                            </td>
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th class="text-center">
+                                    {{ isUsingSelectedTractsAsBase ? 'Selected Tracts' : 'Current Turf' }}
+                                </th>
+                                <th v-if="!isUsingSelectedTractsAsBase" class="text-center">
+                                    Selected Tracts
+                                </th>
+                                <th v-if="!isUsingSelectedTractsAsBase" class="text-center">
+                                    Difference
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="metric in getMetricsByCategory(category)" :key="metric.id">
+                                <td class="font-medium">
+                                    {{ metric.name }}
+                                </td>
 
-                            <!-- Base value (turf or selectedTracts fallback) -->
-                      <td class="metric-value has-text-centered">
-  {{ formatNumber(demographics.aggregated[metric.id]) }}
-</td>
+                                <!-- Base value (turf or selectedTracts fallback) -->
+                                <td class="text-center font-mono">
+                                    {{ formatNumber(demographics.aggregated[metric.id]) }}
+                                </td>
 
-                            <!-- Comparison only shown when a real turf exists -->
-                          <td
-  v-if="!isUsingSelectedTractsAsBase"
-  class="metric-value has-text-centered"
->
-  {{ formatNumber(selectedTractsDemographics?.aggregated?.[metric.id]) }}
-</td>
-                            <td v-if="!isUsingSelectedTractsAsBase" class="has-text-centered">
-                                <span class="tag" :class="getDifferenceClass(getDifference(metric.id))">
-                                    {{ formatDifference(getDifference(metric.id)) }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <!-- Comparison only shown when a real turf exists -->
+                                <td v-if="!isUsingSelectedTractsAsBase" class="text-center font-mono">
+                                    {{ formatNumber(selectedTractsDemographics?.aggregated?.[metric.id]) }}
+                                </td>
+                                <td v-if="!isUsingSelectedTractsAsBase" class="text-center">
+                                    <span class="badge" :class="getDifferenceClass(getDifference(metric.id))">
+                                        {{ formatDifference(getDifference(metric.id)) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div v-else class="notification is-light">
-            No demographic data available.
+        <div v-else class="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                class="stroke-info shrink-0 w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>No demographic data available.</span>
         </div>
     </div>
 </template>
 
 <style scoped>
-.demographics-container {
-    height: 100%;
-    overflow-y: auto;
-    padding: 1rem;
-}
-
-.comparison-table {
+.table {
     font-size: 0.875rem;
-}
-
-.comparison-table .metric-name {
-    font-weight: 500;
-}
-
-.comparison-table .metric-value {
-    font-family: monospace;
-}
-
-.comparison-table thead th {
-    background-color: #f5f5f5;
-    font-weight: 600;
 }
 </style>
