@@ -16,9 +16,10 @@ def hello_world(user_name, user_id, org_name, org_id): # get user info from djan
     }
 
 # Endpoints to get, post, put, delete turfs 
-@app.route("/api/edit", methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route("/api/edit", methods=['GET', 'POST'])
+@app.route("/api/edit/<int:record_id>", methods=['PUT', 'DELETE'])
 @with_user_info
-def edit_turf(user_name, user_id, org_name, org_id):
+def edit_turf(user_name, user_id, org_name, org_id, record_id=None):
     allowed_org_id = db.has_permissions_to_access_org(org_id, user_id)
     
     if allowed_org_id is False:
@@ -35,17 +36,23 @@ def edit_turf(user_name, user_id, org_name, org_id):
         # Create a new record
         data = request.json
         tracts = data.get('tracts', [])
-        description = data.get('description', {'name': '', 'details': ''})
+        name = data.get('name', '')
+        details = data.get('details', '')
+        description = {'name': name, 'details': details}
         
         new_record = db.add_record(tracts, description, org_id)
         return jsonify(new_record), 201
 
     elif request.method == 'PUT':
         # Edit an existing record
+        if not record_id:
+            return jsonify({"error": "Record ID is required"}), 400
+            
         data = request.json
-        record_id = data.get('id')
         tracts = data.get('tracts', [])
-        description = data.get('description', {'name': '', 'description': ''})
+        name = data.get('name', '')
+        details = data.get('details', '')
+        description = {'name': name, 'details': details}
         
         updated_record = db.edit_record(record_id, tracts, description)
         if updated_record:
@@ -55,7 +62,8 @@ def edit_turf(user_name, user_id, org_name, org_id):
 
     elif request.method == 'DELETE':
         # Delete a record
-        record_id = request.args.get('id')  # Assuming the record ID is passed as a query parameter
+        if not record_id:
+            return jsonify({"error": "Record ID is required"}), 400
         
         if db.delete_record(record_id):
             return jsonify({"message": "Record deleted successfully"}), 200
